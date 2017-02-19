@@ -1,10 +1,5 @@
-﻿using Mapsui.Forms;
-using Mapsui.Geometries;
-using Mapsui.Layers;
-using Mapsui.Projection;
-using Mapsui.Providers;
-using Mapsui.Samples.Common.Maps;
-using Mapsui.Styles;
+﻿using Mapsui.Samples.Common.Maps;
+using System;
 using Xamarin.Forms;
 
 namespace Mapsui.Samples.Forms
@@ -16,8 +11,14 @@ namespace Mapsui.Samples.Forms
 			InitializeComponent();
 
 			mapView.Map = BingSample.CreateMap();
+
 //			mapView.Map = InfoLayersSample.CreateMap();
 //			mapView.Map = LabelsSample.CreateMap();
+		}
+
+		void OnButtonClicked(object sender, EventArgs e)
+		{
+			mapView.BackgroundColor = Xamarin.Forms.Color.Red; 
 		}
 	}
 }
