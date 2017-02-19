@@ -5,7 +5,7 @@
 			 xmlns:mapsui="clr-namespace:Mapsui.Forms;assembly=Mapsui.Forms"
              x:Class="Mapsui.Samples.Forms.MainPage">
 
-  <StackLayout Orientation="Vertical">
+  <StackLayout Orientation="Vertical" BackgroundColor="LightGray">
 
 	<Label Text="Welcome to MapsUI!"
 		   VerticalOptions="Fill"
@@ -13,7 +13,11 @@
 
 	<mapsui:MapView x:Name="mapView"
 		  VerticalOptions="FillAndExpand"
-		  HorizontalOptions="Fill" />
+		  HorizontalOptions="Fill"
+		  BackgroundColor="Gray" 
+		  Margin="10" />
+
+	<Button Text="Color" Clicked="OnButtonClicked" />
 
   </StackLayout>
 
