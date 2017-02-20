@@ -135,7 +135,7 @@ namespace Mapsui
         }
 
         /// <summary>
-        /// Map background color (defaults to transparent)
+        /// Map background color (defaults to white)
         ///  </summary>
         public Color BackColor { get; set; } 
 
