@@ -1,6 +1,5 @@
 ﻿using Mapsui.Forms.Extensions;
-using Mapsui.Projection;
-using System;
+using System.Runtime.CompilerServices;
 using Xamarin.Forms;
 
 namespace Mapsui.Forms
@@ -20,6 +19,10 @@ namespace Mapsui.Forms
 			Map = new Map();
 		}
 
+		/// <summary>
+		/// Events
+		/// </summary>
+
 		public Map Map
 		{
 			get
@@ -33,8 +36,7 @@ namespace Mapsui.Forms
 					nativeMap = value;
 					// Set defaults
 					nativeMap.BackColor = BackgroundColor.ToMapsuiColor();
-					// TODO
-					// Something changed, so update map
+					RefreshGraphics();
 				}
 			}
 		}
@@ -43,19 +45,15 @@ namespace Mapsui.Forms
 		/// Properties
 		/// </summary>
 		 
-		public new Color BackgroundColor
+		public new Color ackgroundColor
 		{
 			get
 			{
-				return (Color)GetValue(BackgroundColorProperty);
+				return (Color)GetValue(ackgroundColorProperty);
 			}
 			set
 			{
-				if (value != null && nativeMap.BackColor != value.ToMapsuiColor())
-				{
-					nativeMap.BackColor = value.ToMapsuiColor();
-					SetValue(BackgroundColorProperty, value);
-				}
+				SetValue(ackgroundColorProperty, value);
 			}
 		}
 
@@ -63,12 +61,35 @@ namespace Mapsui.Forms
 		/// Bindings
 		/// </summary>
 		 
-		public new static readonly BindableProperty BackgroundColorProperty = BindableProperty.Create(
-																propertyName: nameof(BackgroundColor),
+		public new static readonly BindableProperty ackgroundColorProperty = BindableProperty.Create(
+																propertyName: nameof(ackgroundColor),
 																returnType: typeof(Color),
 																declaringType: typeof(MapView),
 																defaultValue: Color.White,
 																defaultBindingMode: BindingMode.TwoWay,
 																propertyChanged: null);
+
+		/// <summary>
+		/// Check if something important for Map changed
+		/// </summary>
+		/// <param name="propertyName">Name of property which changed</param>
+		protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
+		{
+			base.OnPropertyChanged(propertyName);
+
+			if (propertyName.Equals(nameof(BackgroundColor)))
+			{
+				nativeMap.BackColor = BackgroundColor.ToMapsuiColor();
+				RefreshGraphics();
+			}
+		}
+
+		/// <summary>
+		/// Refresh the graphics of the map
+		/// </summary>
+		public void RefreshGraphics()
+		{
+			MessagingCenter.Send<MapView>(this, "Refresh");
+		}
 	}
 }

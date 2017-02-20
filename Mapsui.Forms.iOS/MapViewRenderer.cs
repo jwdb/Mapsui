@@ -26,10 +26,19 @@ namespace Mapsui.Forms.iOS
 		{
 			base.OnElementChanged(e);
 
+			if (e.OldElement != null)
+			{
+				MessagingCenter.Unsubscribe<MapView>(this, "Refresh");
+			}
+
 			if (mapViewControl == null && e.NewElement != null)
 			{
 				// Get the Mapsui Forms control
 				mapViewControl = e.NewElement as MapView;
+				// Subscribe messages for refreshing the map control
+				MessagingCenter.Subscribe<MapView>(this, "Refresh", (sender) => {
+					mapNativeControl?.RefreshGraphics();
+				});
 			}
 
 			if (mapNativeControl == null)

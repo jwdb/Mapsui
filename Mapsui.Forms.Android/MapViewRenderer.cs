@@ -20,15 +20,24 @@ namespace Mapsui.Forms.Android
 		{
 			base.OnElementChanged(e);
 
+			if (e.OldElement != null)
+			{
+				MessagingCenter.Unsubscribe<MapView>(this, "Refresh");
+			}
+
 			if (mapViewControl == null && e.NewElement != null)
 			{
 				// Get the MapsUI Forms control
 				mapViewControl = e.NewElement as MapView;
+				// Subscribe messages for refreshing the map control
+				MessagingCenter.Subscribe<MapView>(this, "Refresh", (sender) => {
+					mapNativeControl?.RefreshGraphics();
+				});
 			}
 
 			if (mapNativeControl == null)
 			{
-				// Set Native android implementation
+				// Set Native Android implementation
 				mapNativeControl = new Mapsui.UI.Android.MapControl(Context, null);
 
 				// Link our Forms control to the native control

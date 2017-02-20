@@ -1,4 +1,3 @@
-using System;
 using Xamarin.Forms.Platform.UWP;
 using Xamarin.Forms;
 using Mapsui.Forms;
@@ -21,10 +20,19 @@ namespace Mapsui.Forms.Uwp
 		{
 			base.OnElementChanged(e);
 
+			if (e.OldElement != null)
+			{
+				MessagingCenter.Unsubscribe<MapView>(this, "Refresh");
+			}
+
 			if (mapViewControl == null && e.NewElement != null)
 			{
 				// Get the MapsUI Forms control
 				mapViewControl = e.NewElement as MapView;
+				// Subscribe messages for refreshing the map control
+				MessagingCenter.Subscribe<MapView>(this, "Refresh", (sender) => {
+					mapNativeControl?.RefreshGraphics();
+				});
 			}
 
 			if (mapNativeControl == null)
