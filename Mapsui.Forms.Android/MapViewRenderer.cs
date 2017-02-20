@@ -31,7 +31,7 @@ namespace Mapsui.Forms.Android
 				// Set Native android implementation
 				mapNativeControl = new Mapsui.UI.Android.MapControl(Context, null);
 
-				// Link our Forms Control to the Native control
+				// Link our Forms control to the native control
 				mapNativeControl.Map = mapViewControl.Map;
 
 				// Set native app

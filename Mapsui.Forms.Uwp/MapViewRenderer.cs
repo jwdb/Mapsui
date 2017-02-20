@@ -1,3 +1,4 @@
+using System;
 using Xamarin.Forms.Platform.UWP;
 using Xamarin.Forms;
 using Mapsui.Forms;
@@ -7,11 +8,11 @@ using Mapsui.Forms.Uwp;
 [assembly: ExportRenderer(typeof(MapView), typeof(MapViewRenderer))]
 namespace Mapsui.Forms.Uwp
 {
-	// Extend ViewRenderer and link it to our Forms Control, and to the MapsUI implementation for Android
+	// Extend ViewRenderer and link it to our Forms Control, and to the MapsUI implementation for UWP
 	public class MapViewRenderer : ViewRenderer<MapView, Mapsui.UI.Uwp.MapControl>
 	{
-		// MapsUI Native Android implementation
-		Mapsui.UI.Uwp.MapControl mapControl;
+		// MapsUI Native UWP implementation
+		Mapsui.UI.Uwp.MapControl mapNativeControl;
 
 		// Our MapsUI Forms Control
 		MapView mapViewControl;
@@ -26,16 +27,16 @@ namespace Mapsui.Forms.Uwp
 				mapViewControl = e.NewElement as MapView;
 			}
 
-			if (mapControl == null)
+			if (mapNativeControl == null)
 			{
-				// Set Native iOS implementation
-				mapControl = new Mapsui.UI.Uwp.MapControl();
+				// Set Native UWP implementation
+				mapNativeControl = new Mapsui.UI.Uwp.MapControl();
 
-				// Link our Forms Control to the Native control
-				mapControl.Map = mapViewControl.Map;
+				// Link our Forms control to the Native control
+				mapNativeControl.Map = mapViewControl.Map;
 
 				// Set native app
-				SetNativeControl(mapControl);
+				SetNativeControl(mapNativeControl);
 			}
 		}
 	}
