@@ -27,7 +27,7 @@ namespace Mapsui.Forms
 
 			if (startPosition != null)
 			{
-				VisibleRegion = startPosition;
+				UpdateVisibleRegion(startPosition);
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace Mapsui.Forms
 				// Get values
 				//Center = nativeMap.Viewport.Center;
 				// Set values
-				VisibleRegion = LastMoveToRegion;
+				UpdateVisibleRegion(LastMoveToRegion);
 				nativeMap.BackColor = BackgroundColor.ToMapsuiColor();
 			}
 		}
@@ -83,10 +83,6 @@ namespace Mapsui.Forms
 				var center = Projection.SphericalMercator.ToLonLat(nativeMap.Viewport.Center.X, nativeMap.Viewport.Center.Y);
 
 				return new MapSpan(new Position(center.Y, center.X), Math.Abs(rightTop.Y - leftBottom.Y) / 2, Math.Abs(leftBottom.X - rightTop.X) / 2);
-			}
-			internal set
-			{
-				UpdateVisibleRegion(value);
 			}
 		}
 
@@ -118,7 +114,7 @@ namespace Mapsui.Forms
 			if (mapSpan == null)
 				throw new ArgumentNullException(nameof(mapSpan));
 			LastMoveToRegion = mapSpan;
-			VisibleRegion = mapSpan;
+			UpdateVisibleRegion(mapSpan);
 		}
 
 		/// <summary>
@@ -145,7 +141,8 @@ namespace Mapsui.Forms
 
 			if (propertyName.Equals(nameof(Center)))
 			{
-				VisibleRegion = new MapSpan(Center, LastMoveToRegion.LatitudeDegrees, LastMoveToRegion.LongitudeDegrees);
+				// Center changed via property
+				return;
 			}
 
 			RaisePropertyChanged(propertyName);
@@ -168,16 +165,30 @@ namespace Mapsui.Forms
 		/// <param name="e"></param>
 		void ViewportPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if ((e.PropertyName.Equals("Width") | e.PropertyName.Equals("Height"))
-				&& (nativeMap.Viewport.Width != 0 & nativeMap.Viewport.Height != 0))
+			// Only check, if the Viewport is correct
+			if (nativeMap.Viewport.Width == 0 || nativeMap.Viewport.Height == 0)
+				return;
+
+			// Did Center changed?
+			if (e.PropertyName.Equals("Center"))
+			{
+				var centerPoint = Projection.SphericalMercator.ToLonLat(nativeMap.Viewport.Center.X, nativeMap.Viewport.Center.Y);
+				var centerPosition = new Position(centerPoint.Y, centerPoint.X);
+
+				if (Center.Equals(centerPosition))
+					return;
+
+				Center = centerPosition;
+
+				// We don't need to resend event again
+				return;
+			}
+
+			// Did Viewport dimensions changed
+			if (e.PropertyName.Equals("Width") | e.PropertyName.Equals("Height"))
 			{
 				// Viewport changed size, so recalculate VisibleRegion
 				UpdateVisibleRegion(LastMoveToRegion);
-			}
-
-			if (e.PropertyName.Equals("Center"))
-			{
-				VisibleRegion = new MapSpan(Center, LastMoveToRegion.LatitudeDegrees, LastMoveToRegion.LongitudeDegrees);
 			}
 
 			RaisePropertyChanged(e.PropertyName);
@@ -209,8 +220,6 @@ namespace Mapsui.Forms
 			var rightTop = Projection.SphericalMercator.FromLonLat(right, top);
 
 			nativeMap.NavigateTo(new Geometries.BoundingBox(leftBottom, rightTop));
-
-			Center = newMapSpan.Center;
 		}
 	}
 }

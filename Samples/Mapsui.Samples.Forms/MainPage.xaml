@@ -17,10 +17,19 @@
 		  BackgroundColor="Gray" 
 		  Margin="10" />
 
-	<Label BindingContext="{x:Reference mapView}"
-		   Text="{Binding MapView.Center}"
-		   VerticalOptions="Fill"
-		   HorizontalOptions="Center" />
+	<StackLayout Orientation="Horizontal" BackgroundColor="White">
+
+	  <Label BindingContext="{x:Reference Name=mapView}"
+			 Text="{Binding Center.Latitude}"
+			 VerticalOptions="Fill"
+			 HorizontalOptions="FillAndExpand" />
+
+	  <Label BindingContext="{x:Reference Name=mapView}"
+			 Text="{Binding Center.Longitude}"
+			 VerticalOptions="Fill"
+			 HorizontalOptions="End" />
+
+	</StackLayout>
 
 	<Button Text="Color" Clicked="OnButtonClicked" />
 
