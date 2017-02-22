@@ -29,6 +29,7 @@ namespace Mapsui.Forms.Android
 			{
 				// Get the MapsUI Forms control
 				mapViewControl = e.NewElement as MapView;
+				
 				// Subscribe messages for refreshing the map control
 				MessagingCenter.Subscribe<MapView>(this, "Refresh", (sender) => {
 					mapNativeControl?.RefreshGraphics();
@@ -42,6 +43,9 @@ namespace Mapsui.Forms.Android
 
 				// Link our Forms control to the native control
 				mapNativeControl.Map = mapViewControl.Map;
+
+				// Get events from Map
+				mapNativeControl.Map.PropertyChanged += mapViewControl.OnMapPropertyChanged;
 
 				// Set native app
 				SetNativeControl(mapNativeControl);

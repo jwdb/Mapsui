@@ -35,8 +35,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Xamarin\Distance.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
+    <Compile Include="Xamarin\MapSpan.cs" />
     <Compile Include="MapView.cs" />
+    <Compile Include="Xamarin\Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

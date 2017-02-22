@@ -1,6 +1,8 @@
 ﻿using Mapsui.Forms.Extensions;
 using System.Runtime.CompilerServices;
 using Xamarin.Forms;
+using System;
+using System.ComponentModel;
 
 namespace Mapsui.Forms
 {
@@ -31,13 +33,16 @@ namespace Mapsui.Forms
 			}
 			set
 			{
-				if (value != nativeMap)
-				{
-					nativeMap = value;
-					// Set defaults
-					nativeMap.BackColor = BackgroundColor.ToMapsuiColor();
-					RefreshGraphics();
-				}
+				if (value == nativeMap)
+					return;
+
+				nativeMap = value;
+				// Get values
+				//Center = nativeMap.Viewport.Center;
+				// Set values
+				nativeMap.BackColor = BackgroundColor.ToMapsuiColor();
+				// Refrash graphics of map
+				RefreshGraphics();
 			}
 		}
 
@@ -45,29 +50,33 @@ namespace Mapsui.Forms
 		/// Properties
 		/// </summary>
 		 
-		public new Color ackgroundColor
+		public Mapsui.Geometries.Point Center
 		{
-			get
-			{
-				return (Color)GetValue(ackgroundColorProperty);
-			}
-			set
-			{
-				SetValue(ackgroundColorProperty, value);
-			}
+			get { return (Mapsui.Geometries.Point)GetValue(CenterProperty); }
+			set { SetValue(CenterProperty, value); }
 		}
 
 		/// <summary>
 		/// Bindings
 		/// </summary>
 		 
-		public new static readonly BindableProperty ackgroundColorProperty = BindableProperty.Create(
-																propertyName: nameof(ackgroundColor),
-																returnType: typeof(Color),
-																declaringType: typeof(MapView),
-																defaultValue: Color.White,
-																defaultBindingMode: BindingMode.TwoWay,
-																propertyChanged: null);
+		public static readonly BindableProperty CenterProperty = BindableProperty.Create(
+										propertyName: nameof(Center),
+										returnType: typeof(Mapsui.Geometries.Point),
+										declaringType: typeof(MapView),
+										defaultValue: default(Mapsui.Geometries.Point),
+										defaultBindingMode: BindingMode.TwoWay,
+										propertyChanged: null);
+
+		/// <summary>
+		/// Get updates from Map
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		public void OnMapPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine("Property {0} changed", e.PropertyName);
+		}
 
 		/// <summary>
 		/// Check if something important for Map changed
@@ -81,6 +90,11 @@ namespace Mapsui.Forms
 			{
 				nativeMap.BackColor = BackgroundColor.ToMapsuiColor();
 				RefreshGraphics();
+			}
+
+			if (propertyName.Equals(nameof(Center)))
+			{
+				nativeMap.Viewport.Center = Center;
 			}
 		}
 
