@@ -39,20 +39,20 @@ namespace Mapsui
         private bool _lock;
 		private Color _backColor = Color.White;
 
-        /// <summary>
-        /// Initializes a new map
-        /// </summary>
-        public Map()
-        {
-            BackColor = Color.White;
-            Layers = new LayerCollection();
-            Viewport =  new Viewport { Center = { X = double.NaN, Y = double.NaN }, Resolution = double.NaN };
-        }
+		/// <summary>
+		/// Initializes a new map with given Viewport
+		/// </summary>
+		public Map(Viewport viewport = null)
+		{
+			BackColor = Color.White;
+			Layers = new LayerCollection();
+			Viewport = viewport != null ? viewport : new Viewport { Center = { X = double.NaN, Y = double.NaN }, Resolution = double.NaN };
+		}
 
-        /// <summary>
-        /// When Lock is true the map view will not respond to touch input.
-        /// </summary>
-        public bool Lock
+		/// <summary>
+		/// When Lock is true the map view will not respond to touch input.
+		/// </summary>
+		public bool Lock
         {
             get { return _lock; }
             set
