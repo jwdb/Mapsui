@@ -29,7 +29,7 @@ namespace Mapsui.Samples.Forms
 			// Additionally you might want to set the resolution, this could depend on your specific purpose
 			mapView.Map.Viewport.Resolution = mapView.Map.Resolutions[9];
 			mapView.BackgroundColor = Color.Red;
-			mapView.VisibleRegion = new Xamarin.Forms.Maps.MapSpan(new Xamarin.Forms.Maps.Position(48.4789167, 9.2706), 0.01, 0.01);
+			mapView.MoveToRegion(new Xamarin.Forms.Maps.MapSpan(new Xamarin.Forms.Maps.Position(48.4789167, 9.2706), 0.01, 0.01));
 			var test = mapView.VisibleRegion;
 		}
 	}

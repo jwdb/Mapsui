@@ -17,6 +17,11 @@
 		  BackgroundColor="Gray" 
 		  Margin="10" />
 
+	<Label BindingContext="{x:Reference mapView}"
+		   Text="{Binding MapView.Center}"
+		   VerticalOptions="Fill"
+		   HorizontalOptions="Center" />
+
 	<Button Text="Color" Clicked="OnButtonClicked" />
 
   </StackLayout>

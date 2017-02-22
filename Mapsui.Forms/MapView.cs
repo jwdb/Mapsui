@@ -84,7 +84,7 @@ namespace Mapsui.Forms
 
 				return new MapSpan(new Position(center.Y, center.X), Math.Abs(rightTop.Y - leftBottom.Y) / 2, Math.Abs(leftBottom.X - rightTop.X) / 2);
 			}
-			set
+			internal set
 			{
 				UpdateVisibleRegion(value);
 			}
@@ -168,10 +168,16 @@ namespace Mapsui.Forms
 		/// <param name="e"></param>
 		void ViewportPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if ((e.PropertyName == nameof(IViewport.Width) | e.PropertyName == nameof(IViewport.Height))
-				&& nativeMap.Viewport.Width != 0 && nativeMap.Viewport.Height != 0)
+			if ((e.PropertyName.Equals("Width") | e.PropertyName.Equals("Height"))
+				&& (nativeMap.Viewport.Width != 0 & nativeMap.Viewport.Height != 0))
 			{
+				// Viewport changed size, so recalculate VisibleRegion
 				UpdateVisibleRegion(LastMoveToRegion);
+			}
+
+			if (e.PropertyName.Equals("Center"))
+			{
+				VisibleRegion = new MapSpan(Center, LastMoveToRegion.LatitudeDegrees, LastMoveToRegion.LongitudeDegrees);
 			}
 
 			RaisePropertyChanged(e.PropertyName);
@@ -195,14 +201,16 @@ namespace Mapsui.Forms
 			LastMoveToRegion = newMapSpan;
 
 			var top = newMapSpan.Center.Latitude + newMapSpan.LatitudeDegrees;
-			var latBottom = newMapSpan.Center.Latitude - newMapSpan.LatitudeDegrees;
-			var lonLeft = newMapSpan.Center.Longitude - newMapSpan.LongitudeDegrees;
-			var lonRight = newMapSpan.Center.Longitude + newMapSpan.LongitudeDegrees;
+			var bottom = newMapSpan.Center.Latitude - newMapSpan.LatitudeDegrees;
+			var left = newMapSpan.Center.Longitude - newMapSpan.LongitudeDegrees;
+			var right = newMapSpan.Center.Longitude + newMapSpan.LongitudeDegrees;
 
-			var leftBottom = Projection.SphericalMercator.FromLonLat(lonLeft, latBottom);
-			var rightTop = Projection.SphericalMercator.FromLonLat(lonRight, top);
+			var leftBottom = Projection.SphericalMercator.FromLonLat(left, bottom);
+			var rightTop = Projection.SphericalMercator.FromLonLat(right, top);
 
 			nativeMap.NavigateTo(new Geometries.BoundingBox(leftBottom, rightTop));
+
+			Center = newMapSpan.Center;
 		}
 	}
 }
