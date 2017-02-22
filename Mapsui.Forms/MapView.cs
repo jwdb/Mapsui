@@ -3,26 +3,42 @@ using System.Runtime.CompilerServices;
 using Xamarin.Forms;
 using System;
 using System.ComponentModel;
+using Xamarin.Forms.Maps;
 
 namespace Mapsui.Forms
 {
 	/// <summary>
 	/// This is the Mapsui Forms Control that will be used within the Forms PCL project
 	/// </summary>
-	public class MapView : View
+	public class MapView : View, INotifyPropertyChanged
 	{
 		/// <summary>
 		/// Privates
 		/// </summary>
 		internal Map nativeMap;
 
-		public MapView()
+		public MapView() : this(new MapSpan(new Position(41.890202, 12.492049), 0.1, 0.1))
+		{
+		}
+
+		public MapView(MapSpan startPosition = null)
 		{
 			Map = new Map();
+
+			if (startPosition != null)
+			{
+				VisibleRegion = startPosition;
+			}
 		}
 
 		/// <summary>
 		/// Events
+		/// </summary>
+
+		public new PropertyChangedEventHandler PropertyChanged;
+
+		/// <summary>
+		/// Properties
 		/// </summary>
 
 		public Map Map
@@ -33,11 +49,11 @@ namespace Mapsui.Forms
 			}
 			set
 			{
-				if (value == nativeMap)
+				if (nativeMap == value)
 					return;
 
 				nativeMap = value;
-				// Replace viewport with NotifyViewport, so that we get events
+				// Replace Viewport with NotifyViewport, so that we get events when Viewport changes
 				var oldViewport = nativeMap.Viewport as Viewport;
 				if (oldViewport != null)
 				{
@@ -45,20 +61,38 @@ namespace Mapsui.Forms
 					newViewport.PropertyChanged += ViewportPropertyChanged;
 					nativeMap.Viewport = newViewport;
 				}
+				RefreshGraphics();
 				// Get values
 				//Center = nativeMap.Viewport.Center;
 				// Set values
+				VisibleRegion = LastMoveToRegion;
 				nativeMap.BackColor = BackgroundColor.ToMapsuiColor();
 			}
 		}
 
-		/// <summary>
-		/// Properties
-		/// </summary>
+		internal MapSpan LastMoveToRegion { get; private set; }
 
-		public Mapsui.Geometries.Point Center
+		public MapSpan VisibleRegion
 		{
-			get { return (Mapsui.Geometries.Point)GetValue(CenterProperty); }
+			get {
+				if (nativeMap == null)
+					return null;
+
+				var leftBottom = Projection.SphericalMercator.ToLonLat(nativeMap.Viewport.Extent.BottomLeft.X, nativeMap.Viewport.Extent.BottomLeft.X);
+				var rightTop = Projection.SphericalMercator.ToLonLat(nativeMap.Viewport.Extent.TopRight.X, nativeMap.Viewport.Extent.TopRight.X);
+				var center = Projection.SphericalMercator.ToLonLat(nativeMap.Viewport.Center.X, nativeMap.Viewport.Center.Y);
+
+				return new MapSpan(new Position(center.Y, center.X), Math.Abs(rightTop.Y - leftBottom.Y) / 2, Math.Abs(leftBottom.X - rightTop.X) / 2);
+			}
+			set
+			{
+				UpdateVisibleRegion(value);
+			}
+		}
+
+		public Position Center
+		{
+			get { return (Position)GetValue(CenterProperty); }
 			set { SetValue(CenterProperty, value); }
 		}
 
@@ -68,20 +102,31 @@ namespace Mapsui.Forms
 		 
 		public static readonly BindableProperty CenterProperty = BindableProperty.Create(
 										propertyName: nameof(Center),
-										returnType: typeof(Mapsui.Geometries.Point),
+										returnType: typeof(Position),
 										declaringType: typeof(MapView),
-										defaultValue: default(Mapsui.Geometries.Point),
+										defaultValue: default(Position),
 										defaultBindingMode: BindingMode.TwoWay,
 										propertyChanged: null);
 
 		/// <summary>
-		/// Get updates from Map
+		/// Methods
 		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		public void OnMapPropertyChanged(object sender, PropertyChangedEventArgs e)
+		
+		/// Change Viewport 
+		public void MoveToRegion(MapSpan mapSpan)
 		{
-			System.Diagnostics.Debug.WriteLine("Property {0} changed", e.PropertyName);
+			if (mapSpan == null)
+				throw new ArgumentNullException(nameof(mapSpan));
+			LastMoveToRegion = mapSpan;
+			VisibleRegion = mapSpan;
+		}
+
+		/// <summary>
+		/// Refresh the graphics of the map
+		/// </summary>
+		public void RefreshGraphics()
+		{
+			MessagingCenter.Send<MapView>(this, "Refresh");
 		}
 
 		/// <summary>
@@ -92,6 +137,7 @@ namespace Mapsui.Forms
 		{
 			base.OnPropertyChanged(propertyName);
 
+			// Set new BackgroundColor to nativeMap
 			if (propertyName.Equals(nameof(BackgroundColor)))
 			{
 				nativeMap.BackColor = BackgroundColor.ToMapsuiColor();
@@ -99,30 +145,64 @@ namespace Mapsui.Forms
 
 			if (propertyName.Equals(nameof(Center)))
 			{
-				nativeMap.Viewport.Center = Center;
+				VisibleRegion = new MapSpan(Center, LastMoveToRegion.LatitudeDegrees, LastMoveToRegion.LongitudeDegrees);
 			}
-		}
 
-		private void ViewportPropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-			var viewport = sender as IViewport;
-
-			if (viewport == null)
-				return;
-
-			if (e.PropertyName.Equals(nameof(NotifyingViewport.Center)))
-				System.Diagnostics.Debug.WriteLine("Center {0}", nativeMap.Viewport.Center.ToString());
-
-			if (e.PropertyName.Equals(nameof(NotifyingViewport.Resolution)))
-				System.Diagnostics.Debug.WriteLine("Resolution {0}", nativeMap.Viewport.Resolution.ToString());
+			RaisePropertyChanged(propertyName);
 		}
 
 		/// <summary>
-		/// Refresh the graphics of the map
+		/// Get updates from Map
 		/// </summary>
-		public void RefreshGraphics()
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		public void MapPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			MessagingCenter.Send<MapView>(this, "Refresh");
+			RaisePropertyChanged(e.PropertyName);
+		}
+
+		/// <summary>
+		/// Get updates from Viewport
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void ViewportPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if ((e.PropertyName == nameof(IViewport.Width) | e.PropertyName == nameof(IViewport.Height))
+				&& nativeMap.Viewport.Width != 0 && nativeMap.Viewport.Height != 0)
+			{
+				UpdateVisibleRegion(LastMoveToRegion);
+			}
+
+			RaisePropertyChanged(e.PropertyName);
+		}
+
+		/// <summary>
+		/// Raise event for PropertyChanged of MapView
+		/// </summary>
+		/// <param name="propertyName"></param>
+		void RaisePropertyChanged(string propertyName)
+		{
+			var handler = PropertyChanged;
+			handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		void UpdateVisibleRegion(MapSpan newMapSpan)
+		{
+			if (newMapSpan == null || VisibleRegion.Equals(newMapSpan) || nativeMap == null)
+				return;
+
+			LastMoveToRegion = newMapSpan;
+
+			var top = newMapSpan.Center.Latitude + newMapSpan.LatitudeDegrees;
+			var latBottom = newMapSpan.Center.Latitude - newMapSpan.LatitudeDegrees;
+			var lonLeft = newMapSpan.Center.Longitude - newMapSpan.LongitudeDegrees;
+			var lonRight = newMapSpan.Center.Longitude + newMapSpan.LongitudeDegrees;
+
+			var leftBottom = Projection.SphericalMercator.FromLonLat(lonLeft, latBottom);
+			var rightTop = Projection.SphericalMercator.FromLonLat(lonRight, top);
+
+			nativeMap.NavigateTo(new Geometries.BoundingBox(leftBottom, rightTop));
 		}
 	}
 }

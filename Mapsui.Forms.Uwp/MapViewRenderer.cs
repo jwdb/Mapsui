@@ -43,6 +43,9 @@ namespace Mapsui.Forms.Uwp
 				// Link our Forms control to the Native control
 				mapNativeControl.Map = mapViewControl.Map;
 
+				// Get events from Map
+				mapNativeControl.Map.PropertyChanged += mapViewControl.MapPropertyChanged;
+
 				// Set native app
 				SetNativeControl(mapNativeControl);
 			}

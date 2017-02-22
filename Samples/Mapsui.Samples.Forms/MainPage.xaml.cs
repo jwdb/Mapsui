@@ -11,6 +11,7 @@ namespace Mapsui.Samples.Forms
 		{
 			InitializeComponent();
 
+			mapView.PropertyChanged += (s, e) => System.Diagnostics.Debug.WriteLine(e.PropertyName);
 			mapView.Map = BingSample.CreateMap();
 
 //			mapView.Map = InfoLayersSample.CreateMap();
@@ -27,7 +28,9 @@ namespace Mapsui.Samples.Forms
 			mapView.Map.Viewport.Center = sphericalMercatorCoordinate;
 			// Additionally you might want to set the resolution, this could depend on your specific purpose
 			mapView.Map.Viewport.Resolution = mapView.Map.Resolutions[9];
-			((Button)sender).Text = mapView?.Center?.ToString(); 
+			mapView.BackgroundColor = Color.Red;
+			mapView.VisibleRegion = new Xamarin.Forms.Maps.MapSpan(new Xamarin.Forms.Maps.Position(48.4789167, 9.2706), 0.01, 0.01);
+			var test = mapView.VisibleRegion;
 		}
 	}
 }

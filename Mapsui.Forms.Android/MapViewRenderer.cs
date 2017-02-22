@@ -45,7 +45,7 @@ namespace Mapsui.Forms.Android
 				mapNativeControl.Map = mapViewControl.Map;
 
 				// Get events from Map
-				mapNativeControl.Map.PropertyChanged += mapViewControl.OnMapPropertyChanged;
+				mapNativeControl.Map.PropertyChanged += mapViewControl.MapPropertyChanged;
 
 				// Set native app
 				SetNativeControl(mapNativeControl);
