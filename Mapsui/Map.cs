@@ -42,7 +42,7 @@ namespace Mapsui
 		/// <summary>
 		/// Initializes a new map with given Viewport
 		/// </summary>
-		public Map(Viewport viewport = null)
+		public Map(IViewport viewport = null)
 		{
 			BackColor = Color.White;
 			Layers = new LayerCollection();
@@ -94,7 +94,7 @@ namespace Mapsui
 
         public IList<ILayer> HoverInfoLayers { get; private set; } = new List<ILayer>();
 
-        public Viewport Viewport { get; }
+        public IViewport Viewport { get; set; }
 
         public void NavigateTo(BoundingBox extent, ScaleMethod scaleMethod = ScaleMethod.Fit)
         {

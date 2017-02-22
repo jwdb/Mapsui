@@ -5,7 +5,7 @@ namespace Mapsui
 {
     public class NotifyingViewport : IViewport
     {
-        private readonly Viewport _viewport = new Viewport();
+        private readonly Viewport _viewport;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -15,6 +15,11 @@ namespace Mapsui
         {
             set { _viewport.RenderResolutionMultiplier = value; }
         }
+
+		public NotifyingViewport(Viewport viewport = null)
+		{
+			_viewport = viewport != null ? viewport : new Mapsui.Viewport();
+		}
 
         public Point Center
         {
@@ -113,6 +118,8 @@ namespace Mapsui
         public void Transform(double screenX, double screenY, double previousScreenX, double previousScreenY, double deltaScale = 1)
         {
             _viewport.Transform(screenX, screenY, previousScreenX, previousScreenY, deltaScale);
+			OnPropertyChanged(nameof(Center));
+			OnPropertyChanged(nameof(Resolution));
         }
 
         protected virtual void OnPropertyChanged(string propertyName)
@@ -120,7 +127,5 @@ namespace Mapsui
             var handler = PropertyChanged;
             handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-
     }
 }
