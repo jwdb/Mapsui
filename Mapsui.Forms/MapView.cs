@@ -41,8 +41,6 @@ namespace Mapsui.Forms
 				//Center = nativeMap.Viewport.Center;
 				// Set values
 				nativeMap.BackColor = BackgroundColor.ToMapsuiColor();
-				// Refrash graphics of map
-				RefreshGraphics();
 			}
 		}
 
@@ -89,7 +87,6 @@ namespace Mapsui.Forms
 			if (propertyName.Equals(nameof(BackgroundColor)))
 			{
 				nativeMap.BackColor = BackgroundColor.ToMapsuiColor();
-				RefreshGraphics();
 			}
 
 			if (propertyName.Equals(nameof(Center)))
