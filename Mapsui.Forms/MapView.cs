@@ -37,6 +37,14 @@ namespace Mapsui.Forms
 					return;
 
 				nativeMap = value;
+				// Replace viewport with NotifyViewport, so that we get events
+				var oldViewport = nativeMap.Viewport as Viewport;
+				if (oldViewport != null)
+				{
+					var newViewport = new NotifyingViewport(oldViewport);
+					newViewport.PropertyChanged += ViewportPropertyChanged;
+					nativeMap.Viewport = newViewport;
+				}
 				// Get values
 				//Center = nativeMap.Viewport.Center;
 				// Set values
@@ -47,7 +55,7 @@ namespace Mapsui.Forms
 		/// <summary>
 		/// Properties
 		/// </summary>
-		 
+
 		public Mapsui.Geometries.Point Center
 		{
 			get { return (Mapsui.Geometries.Point)GetValue(CenterProperty); }
@@ -93,6 +101,20 @@ namespace Mapsui.Forms
 			{
 				nativeMap.Viewport.Center = Center;
 			}
+		}
+
+		private void ViewportPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			var viewport = sender as IViewport;
+
+			if (viewport == null)
+				return;
+
+			if (e.PropertyName.Equals(nameof(NotifyingViewport.Center)))
+				System.Diagnostics.Debug.WriteLine("Center {0}", nativeMap.Viewport.Center.ToString());
+
+			if (e.PropertyName.Equals(nameof(NotifyingViewport.Resolution)))
+				System.Diagnostics.Debug.WriteLine("Resolution {0}", nativeMap.Viewport.Resolution.ToString());
 		}
 
 		/// <summary>
