@@ -103,7 +103,7 @@ namespace Mapsui.Utilities
                 throw new Exception("FillMethod not found");
         }
 
-        public static void ZoomToBoudingbox(Viewport viewport,
+        public static void ZoomToBoudingbox(IViewport viewport,
             double x1, double y1, double x2, double y2,
             double screenWidth, double screenHeight,
             ScaleMethod scaleMethod = ScaleMethod.Fit)
