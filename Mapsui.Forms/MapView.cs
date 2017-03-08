@@ -53,15 +53,10 @@ namespace Mapsui.Forms
 					return;
 
 				nativeMap = value;
-				// Replace Viewport with NotifyViewport, so that we get events when Viewport changes
-				var oldViewport = nativeMap.Viewport as Viewport;
-				if (oldViewport != null)
-				{
-					var newViewport = new NotifyingViewport(oldViewport);
-					newViewport.PropertyChanged += ViewportPropertyChanged;
-					nativeMap.Viewport = newViewport;
-				}
-				RefreshGraphics();
+
+				// Add listener for Viewport events
+				nativeMap.Viewport.ViewportChanged += ViewportPropertyChanged;
+
 				// Get values
 				//Center = nativeMap.Viewport.Center;
 				// Set values
@@ -172,7 +167,7 @@ namespace Mapsui.Forms
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		void ViewportPropertyChanged(object sender, PropertyChangedEventArgs e)
+		void ViewportPropertyChanged(object sender, EventArgs e)
 		{
 			// Only check, if the Viewport is correct
 			if (nativeMap.Viewport.Width == 0 || nativeMap.Viewport.Height == 0)
