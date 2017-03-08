@@ -35,6 +35,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Converter\Converter.cs" />
+    <Compile Include="Converter\ConverterPosition.cs" />
+    <Compile Include="Converter\ConverterToLatitude.cs" />
+    <Compile Include="Converter\ConverterToLatLon.cs" />
+    <Compile Include="Converter\ConverterToLongitude.cs" />
     <Compile Include="Xamarin\Distance.cs" />
     <Compile Include="Extensions\ColorExtensions.cs" />
     <Compile Include="Xamarin\MapSpan.cs" />

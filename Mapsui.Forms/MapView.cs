@@ -89,7 +89,7 @@ namespace Mapsui.Forms
 		public Position Center
 		{
 			get { return (Position)GetValue(CenterProperty); }
-			set { SetValue(CenterProperty, value); }
+			private set { SetValue(CenterProperty, value); }
 		}
 
 		/// <summary>
@@ -101,7 +101,7 @@ namespace Mapsui.Forms
 										returnType: typeof(Position),
 										declaringType: typeof(MapView),
 										defaultValue: default(Position),
-										defaultBindingMode: BindingMode.TwoWay,
+										defaultBindingMode: BindingMode.OneWay,
 										propertyChanged: null);
 
 		/// <summary>
@@ -114,6 +114,15 @@ namespace Mapsui.Forms
 			if (mapSpan == null)
 				throw new ArgumentNullException(nameof(mapSpan));
 			LastMoveToRegion = mapSpan;
+			UpdateVisibleRegion(mapSpan);
+		}
+
+		/// Change Viewport 
+		public void MoveToCenter(Position pos)
+		{
+			if (pos == null)
+				throw new ArgumentNullException(nameof(pos));
+			var mapSpan = new MapSpan(pos, LastMoveToRegion.LatitudeDegrees, LastMoveToRegion.LongitudeDegrees);
 			UpdateVisibleRegion(mapSpan);
 		}
 

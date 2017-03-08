@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Mapsui.Samples.Forms"
 			 xmlns:mapsui="clr-namespace:Mapsui.Forms;assembly=Mapsui.Forms"
+			 xmlns:converter="clr-namespace:Mapsui.Forms.Converter;assembly=Mapsui.Forms"
              x:Class="Mapsui.Samples.Forms.MainPage">
 
   <StackLayout Orientation="Vertical" BackgroundColor="LightGray">
@@ -17,17 +18,12 @@
 		  BackgroundColor="Gray" 
 		  Margin="10" />
 
-	<StackLayout Orientation="Horizontal" BackgroundColor="White">
+	<StackLayout Orientation="Horizontal" BackgroundColor="White" Margin="10" >
 
 	  <Label BindingContext="{x:Reference Name=mapView}"
-			 Text="{Binding Center.Latitude}"
+			 Text="{Binding Center, Converter={converter:ConverterPosition}, ConverterParameter='P DD° MM.mmm\'|P DDD° MM.mmm\''}"
 			 VerticalOptions="Fill"
-			 HorizontalOptions="FillAndExpand" />
-
-	  <Label BindingContext="{x:Reference Name=mapView}"
-			 Text="{Binding Center.Longitude}"
-			 VerticalOptions="Fill"
-			 HorizontalOptions="End" />
+			 HorizontalOptions="Center" />
 
 	</StackLayout>
 
