@@ -7,13 +7,14 @@ using Android.Util;
 using Android.Views;
 using Java.Lang;
 using Mapsui.Fetcher;
+using Mapsui.Layers;
 using SkiaSharp;
 using SkiaSharp.Views.Android;
 using Math = System.Math;
 
 namespace Mapsui.UI.Android
 {
-    public class MapControl : SKCanvasView, IMapControl
+    public class MapControl : ViewGroup, IMapControl
     {
         private const int None = 0;
         private const int Dragging = 1;
@@ -25,6 +26,7 @@ namespace Mapsui.UI.Android
         private float _oldDist = 1f;
         private bool _viewportInitialized;
         private Rendering.Skia.MapRenderer _renderer;
+        private SKCanvasView _canvas;
         private Map _map;
         
         public event EventHandler ViewportInitialized;
@@ -32,9 +34,6 @@ namespace Mapsui.UI.Android
         public MapControl(Context context, IAttributeSet attrs) :
             base(context, attrs)
         {
-            //var a = context.ObtainStyledAttributes(attrs, Resource.Styleable.start_with_openstreetmap_style);
-            //var startWithOpenStreetMap = a.GetBoolean(Resource.Attribute.start_with_openstreetmap, false);
-            
             Initialize();
         }
 
@@ -50,6 +49,19 @@ namespace Mapsui.UI.Android
             _renderer = new Rendering.Skia.MapRenderer();
             InitializeViewport();
             Touch += MapView_Touch;
+            _canvas = new SKCanvasView(Context);
+            _canvas.PaintSurface += CanvasOnPaintSurface;
+            AddView(_canvas);
+        }
+
+        private void CanvasOnPaintSurface(object sender, SKPaintSurfaceEventArgs skPaintSurfaceEventArgs)
+        {
+            if (!_viewportInitialized)
+                InitializeViewport();
+            if (!_viewportInitialized)
+                return;
+
+            _renderer.Render(skPaintSurfaceEventArgs.Surface.Canvas, _map.Viewport, _map.Layers, _map.BackColor);
         }
 
         private void InitializeViewport()
@@ -208,9 +220,18 @@ namespace Mapsui.UI.Android
 
         private void MapPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName != "Envelope") return;
-            InitializeViewport();
-            _map.ViewChanged(true);
+            if (e.PropertyName == nameof(Layer.Enabled))
+            {
+                RefreshGraphics();
+            }
+            else if (e.PropertyName == nameof(Layer.Opacity))
+            {
+                RefreshGraphics();
+            }
+            else if (e.PropertyName == nameof(Map.Layers))
+            {
+                //todo: _attributionPanel.Populate(Map.Layers);
+            }
         }
 
         public void MapDataChanged(object sender, DataChangedEventArgs e)
@@ -231,16 +252,12 @@ namespace Mapsui.UI.Android
             PostInvalidate();
         }
 
-        protected override void OnDraw(SKSurface surface, SKImageInfo info)
+        protected override void OnLayout(bool changed, int l, int t, int r, int b)
         {
-            base.OnDraw(surface, info);
-
-            if (!_viewportInitialized)
-                InitializeViewport();
-            if (!_viewportInitialized)
-                return;
-
-            _renderer.Render(surface.Canvas, _map.Viewport, _map.Layers, _map.BackColor);
+            _canvas.Left = l;
+            _canvas.Top = t;
+            _canvas.Right = r;
+            _canvas.Bottom = b;
         }
     }
 }
