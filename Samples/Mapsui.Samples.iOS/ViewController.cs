@@ -2,6 +2,7 @@
 using Mapsui.UI.iOS;
 using UIKit;
 using CoreGraphics;
+using Mapsui.Overlays;
 
 namespace Mapsui.Samples.iOS
 {
@@ -21,10 +22,14 @@ namespace Mapsui.Samples.iOS
 
         private static MapControl CreateMap(CGRect bounds)
         {
-            return new MapControl(bounds)
+			var mapControl = new MapControl(bounds)
             {
                 Map = Common.Maps.InfoLayersSample.CreateMap()
-            };                        
+			};
+
+			mapControl.Map.Overlays.Add(new CenterOverlay() { ForegroundColor = new Styles.Color(255, 0, 255) });
+
+			return mapControl;
         }
     }
 }

@@ -27,6 +27,7 @@ using Mapsui.Providers;
 using Mapsui.Styles;
 using Mapsui.UI;
 using Mapsui.Utilities;
+using Mapsui.Overlays;
 
 namespace Mapsui
 {
@@ -36,7 +37,8 @@ namespace Mapsui
     public class Map : IDisposable, INotifyPropertyChanged
     {
         private LayerCollection _layers = new LayerCollection();
-        private bool _lock;
+		private OverlayCollection _overlays = new OverlayCollection();
+		private bool _lock;
 		private Color _backColor = Color.White;
 
         /// <summary>
@@ -46,6 +48,7 @@ namespace Mapsui
         {
             BackColor = Color.White;
             Layers = new LayerCollection();
+			Overlays = new OverlayCollection();
             Viewport =  new Viewport { Center = { X = double.NaN, Y = double.NaN }, Resolution = double.NaN };
         }
 
@@ -89,8 +92,28 @@ namespace Mapsui
                 _layers.LayerRemoved += LayersLayerRemoved;
             }
         }
-        
-        public IList<ILayer> InfoLayers { get; private set; } = new List<ILayer>();
+
+		/// <summary>
+		/// A collection of layers. The first layer in the list is drawn first, the last one on top.
+		/// </summary>
+		public OverlayCollection Overlays
+		{
+			get { return _overlays; }
+			private set
+			{
+				var tempOverlays = _overlays;
+				if (tempOverlays != null)
+				{
+					_overlays.OverlayAdded -= OverlaysOverlayAdded;
+					_overlays.OverlayRemoved -= OverlaysOverlayRemoved;
+				}
+				_overlays = value;
+				_overlays.OverlayAdded += OverlaysOverlayAdded;
+				_overlays.OverlayRemoved += OverlaysOverlayRemoved;
+			}
+		}
+
+		public IList<ILayer> InfoLayers { get; private set; } = new List<ILayer>();
 
         public IList<ILayer> HoverInfoLayers { get; private set; } = new List<ILayer>();
 
@@ -208,7 +231,14 @@ namespace Mapsui
             OnPropertyChanged(nameof(Layers));
         }
 
-        public void InvokeInfo(Point screenPosition)
+		private void OverlaysOverlayRemoved(IOverlay overlay)
+		{
+			overlay.PropertyChanged -= OverlayPropertyChanged;
+
+			OnPropertyChanged(nameof(Overlays));
+		}
+
+		public void InvokeInfo(Point screenPosition)
         {
             if (Info == null) return;
             var eventArgs = InfoHelper.GetInfoEventArgs(this, screenPosition, InfoLayers);
@@ -230,7 +260,19 @@ namespace Mapsui
             OnPropertyChanged(sender, e.PropertyName);
         }
 
-        private void OnRefreshGraphics()
+		private void OverlaysOverlayAdded(IOverlay overlay)
+		{
+			overlay.PropertyChanged += OverlayPropertyChanged;
+
+			OnPropertyChanged(nameof(Overlays));
+		}
+
+		private void OverlayPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			OnPropertyChanged(sender, e.PropertyName);
+		}
+
+		private void OnRefreshGraphics()
         {
             RefreshGraphics?.Invoke(this, EventArgs.Empty);
         }
@@ -249,8 +291,13 @@ namespace Mapsui
         {
             OnDataChanged(sender, e);
         }
-        
-        private void OnDataChanged(object sender, DataChangedEventArgs e)
+
+		private void OverlayDataChanged(object sender, DataChangedEventArgs e)
+		{
+			OnDataChanged(sender, e);
+		}
+
+		private void OnDataChanged(object sender, DataChangedEventArgs e)
         {
             DataChanged?.Invoke(sender, e);
         }
@@ -269,9 +316,9 @@ namespace Mapsui
             {
                 layer.ViewChanged(majorChange, Viewport.Extent, Viewport.RenderResolution);
             }
-        }
+		}
 
-        public void ClearCache()
+		public void ClearCache()
         {
             foreach (var layer in _layers)
             {

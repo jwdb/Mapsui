@@ -35,6 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BitmapHelper.cs" />
+    <Compile Include="CenterOverlayRenderer.cs" />
     <Compile Include="ExtensionMethods\SkiaExtensions.cs" />
     <Compile Include="LabelRenderer.cs" />
     <Compile Include="LineStringRenderer.cs" />

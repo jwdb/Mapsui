@@ -8,6 +8,7 @@ using Mapsui.Logging;
 using Mapsui.Providers;
 using Mapsui.Styles;
 using SkiaSharp;
+using Mapsui.Overlays;
 
 namespace Mapsui.Rendering.Skia
 {
@@ -26,12 +27,12 @@ namespace Mapsui.Rendering.Skia
             DefaultRendererFactory.Create = () => new MapRenderer();
         }
 
-        public void Render(object target, IViewport viewport, IEnumerable<ILayer> layers, Color background = null)
+        public void Render(object target, IViewport viewport, IEnumerable<ILayer> layers, IEnumerable<IOverlay> overlays = null, Color background = null)
         {
-            Render((SKCanvas) target, viewport, layers, background);
+            Render((SKCanvas) target, viewport, layers, overlays, background);
         }
 
-        public MemoryStream RenderToBitmapStream(IViewport viewport, IEnumerable<ILayer> layers, Color background = null)
+        public MemoryStream RenderToBitmapStream(IViewport viewport, IEnumerable<ILayer> layers, IEnumerable<IOverlay> overlays = null, Color background = null)
         {
             try
             {
@@ -42,7 +43,7 @@ namespace Mapsui.Rendering.Skia
                     using (var canvas = new SKCanvas(bitmap))
                     {
                         
-                        Render(canvas, viewport, layers, background);
+                        Render(canvas, viewport, layers, overlays, background);
                         using (var image = SKImage.FromBitmap(bitmap))
                         {
                             using (var data = image.Encode())
@@ -63,7 +64,7 @@ namespace Mapsui.Rendering.Skia
             }
         }
 
-        private void Render(SKCanvas canvas, IViewport viewport, IEnumerable<ILayer> layers, Color background)
+        private void Render(SKCanvas canvas, IViewport viewport, IEnumerable<ILayer> layers, IEnumerable<IOverlay> overlays, Color background)
         {
             if (background != null)
             {
@@ -77,6 +78,14 @@ namespace Mapsui.Rendering.Skia
             VisibleFeatureIterator.IterateLayers(viewport, layers, (v, l, s) => { RenderFeature(canvas, v, l, s); });
 
             RemoveUnusedTextureInfos();
+
+			foreach(var overlay in overlays)
+			{
+				if (!overlay.Enabled) continue;
+
+				if (overlay is CenterOverlay)
+					CenterOverlayRenderer.Draw(canvas, (CenterOverlay)overlay);
+			}
 
             _currentIteration++;
         }

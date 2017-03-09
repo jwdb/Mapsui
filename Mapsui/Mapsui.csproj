@@ -57,6 +57,9 @@
     <Compile Include="Layers\Attribution.cs" />
     <Compile Include="Layers\TmsTileSourceBuilder.cs" />
     <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Overlays\CenterOverlay.cs" />
+    <Compile Include="Overlays\IOverlay.cs" />
+    <Compile Include="Overlays\OverlayCollection.cs" />
     <Compile Include="Projection\BoundingBoxIterator.cs" />
     <Compile Include="Projection\Mercator.cs" />
     <Compile Include="Projection\MinimalTransformation.cs" />

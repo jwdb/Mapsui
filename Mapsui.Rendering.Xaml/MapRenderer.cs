@@ -17,6 +17,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
 using XamlMedia = System.Windows.Media;
+using Mapsui.Overlays;
 
 namespace Mapsui.Rendering.Xaml
 {
@@ -27,13 +28,13 @@ namespace Mapsui.Rendering.Xaml
             DefaultRendererFactory.Create = () => new MapRenderer();
         }
 
-        public void Render(object target, IViewport viewport, IEnumerable<ILayer> layers, Color background)
+        public void Render(object target, IViewport viewport, IEnumerable<ILayer> layers, IEnumerable<IOverlay> overlays, Color background)
         {
-            Render((Canvas) target, viewport, layers, background, false);
+            Render((Canvas) target, viewport, layers, overlays, background, false);
         }
 
         private static void Render(Canvas target, IViewport viewport, IEnumerable<ILayer> layers,
-            Color background, bool rasterizing)
+			IEnumerable<IOverlay> overlays, Color background, bool rasterizing)
         {
             target.BeginInit();
 
@@ -69,17 +70,17 @@ namespace Mapsui.Rendering.Xaml
             target.EndInit();
         }
 
-        public MemoryStream RenderToBitmapStream(IViewport viewport, IEnumerable<ILayer> layers, Color background = null)
+        public MemoryStream RenderToBitmapStream(IViewport viewport, IEnumerable<ILayer> layers, IEnumerable<IOverlay> overlays, Color background = null)
         {
             MemoryStream bitmapStream = null;
-            RunMethodOnStaThread(() => bitmapStream = RenderToBitmapStreamStatic(viewport, layers, background));
+            RunMethodOnStaThread(() => bitmapStream = RenderToBitmapStreamStatic(viewport, layers, overlays, background));
             return bitmapStream;
         }
         
-        private static MemoryStream RenderToBitmapStreamStatic(IViewport viewport, IEnumerable<ILayer> layers, Color background)
+        private static MemoryStream RenderToBitmapStreamStatic(IViewport viewport, IEnumerable<ILayer> layers, IEnumerable<IOverlay> overlays, Color background)
         {
             var canvas = new Canvas();
-            Render(canvas, viewport, layers, background, true);
+            Render(canvas, viewport, layers, overlays, background, true);
             var bitmapStream = BitmapRendering.BitmapConverter.ToBitmapStream(canvas, (int)viewport.Width, (int)viewport.Height);
             canvas.Children.Clear();
             canvas.Dispatcher.InvokeShutdown();

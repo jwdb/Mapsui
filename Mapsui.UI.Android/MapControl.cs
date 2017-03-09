@@ -76,7 +76,7 @@ namespace Mapsui.UI.Android
 
             args.Surface.Canvas.Scale(_scale, _scale);
 
-            _renderer.Render(args.Surface.Canvas, _map.Viewport, _map.Layers, _map.BackColor);
+            _renderer.Render(args.Surface.Canvas, _map.Viewport, _map.Layers, _map.Overlays, _map.BackColor);
         }
 
         private void InitializeViewport()
