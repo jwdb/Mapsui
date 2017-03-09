@@ -85,9 +85,11 @@ namespace Mapsui.Rendering.Skia
 
 				if (overlay is CenterOverlay)
 					CenterOverlayRenderer.Draw(canvas, (CenterOverlay)overlay);
+				if (overlay is ScaleBarOverlay)
+					ScaleBarOverlayRenderer.Draw(canvas, (ScaleBarOverlay)overlay);
 			}
 
-            _currentIteration++;
+			_currentIteration++;
         }
 
         public void DeleteAllBoundTextures()
