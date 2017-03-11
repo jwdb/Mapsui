@@ -559,7 +559,7 @@ namespace Mapsui.UI.Wpf
         {
             if (Renderer != null && _map != null)
             {
-                Renderer.Render(RenderCanvas, Map.Viewport, _map.Layers, _map.BackColor);
+                Renderer.Render(RenderCanvas, Map.Viewport, _map.Layers, _map.Overlays, _map.BackColor);
                 _invalid = false;
 
                 if (DeveloperTools.DeveloperMode) FpsCounter.FramePlusOne();}
@@ -681,7 +681,7 @@ namespace Mapsui.UI.Wpf
             Map.Viewport.Width = ActualWidth;
             Map.Viewport.Height = ActualHeight;
 
-            Renderer.Render(canvas, Map.Viewport, Map.Layers, Map.BackColor);
+            Renderer.Render(canvas, Map.Viewport, Map.Layers, _map.Overlays, Map.BackColor);
             _invalid = false;
         }
 

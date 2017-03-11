@@ -351,7 +351,7 @@ namespace Mapsui.UI.Uwp
             {
                 if (_skiaScale == null) _skiaScale = GetSkiaScale();
                 e.Surface.Canvas.Scale((float)_skiaScale.X, (float)_skiaScale.Y);
-                _renderer.Render(e.Surface.Canvas, Map.Viewport, _map.Layers, _map.BackColor);
+                _renderer.Render(e.Surface.Canvas, Map.Viewport, _map.Layers, _map.Overlays, _map.BackColor);
                 _renderTarget.Arrange(new Rect(0, 0, Map.Viewport.Width, Map.Viewport.Height));
                 _invalid = false;
             }
