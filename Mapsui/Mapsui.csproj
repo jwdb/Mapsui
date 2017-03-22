@@ -63,6 +63,7 @@
     <Compile Include="Overlays\IUnitConverter.cs" />
     <Compile Include="Overlays\MetricUnitConverter.cs" />
     <Compile Include="Overlays\NauticalUnitConverter.cs" />
+    <Compile Include="Overlays\BaseOverlay.cs" />
     <Compile Include="Overlays\OverlayCollection.cs" />
     <Compile Include="Overlays\ScaleBarOverlay.cs" />
     <Compile Include="Projection\BoundingBoxIterator.cs" />

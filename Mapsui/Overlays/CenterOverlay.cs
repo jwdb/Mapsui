@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Mapsui.Geometries;
 
 namespace Mapsui.Overlays
 {
@@ -128,6 +129,11 @@ namespace Mapsui.Overlays
 		{
 			var handler = PropertyChanged;
 			handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		public void ViewChanged(bool majorChange, BoundingBox extent, double resolution)
+		{
+			// Do nothing up to now
 		}
 	}
 }

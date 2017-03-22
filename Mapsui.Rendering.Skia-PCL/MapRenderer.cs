@@ -86,7 +86,7 @@ namespace Mapsui.Rendering.Skia
 				if (overlay is CenterOverlay)
 					CenterOverlayRenderer.Draw(canvas, (CenterOverlay)overlay);
 				if (overlay is ScaleBarOverlay)
-					ScaleBarOverlayRenderer.Draw(canvas, (ScaleBarOverlay)overlay);
+					ScaleBarOverlayRenderer.Draw(canvas, viewport, (ScaleBarOverlay)overlay);
 			}
 
 			_currentIteration++;

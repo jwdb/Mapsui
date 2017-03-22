@@ -1,75 +1,187 @@
-﻿using System;
+﻿using Mapsui.Styles;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Mapsui.Geometries;
 
 namespace Mapsui.Overlays
 {
 	///
 	/// A ScaleBarOverlay displays the ratio of a distance on the map to the corresponding distance on the ground.
 	///
-	public class ScaleBarOverlay : IOverlay
+	public class ScaleBarOverlay : BaseOverlay
 	{
-		public enum ScaleBarPosition { BottomCenter, BottomLeft, BottomRight, TopCenter, TopLeft, TopRight }
+		public enum ScaleBarPositionEnum { BottomCenter, BottomLeft, BottomRight, TopCenter, TopLeft, TopRight, XYRight, XYCenter, XYLeft }
+		public enum ScaleBarModeEnum { Single, Both };
 
 		///
 		/// Internal class used by calculateScaleBarLengthAndValue
 		///
-		protected class ScaleBarLengthAndValue
+		public class ScaleBarLengthAndValue
 		{
 			public int ScaleBarLength;
 			public int ScaleBarValue;
+			public string ScaleBarText;
 
-			public ScaleBarLengthAndValue(int scaleBarLength, int scaleBarValue)
+			public ScaleBarLengthAndValue(int scaleBarLength, int scaleBarValue, string scaleBarText)
 			{
 				ScaleBarLength = scaleBarLength;
 				ScaleBarValue = scaleBarValue;
+				ScaleBarText = scaleBarText ?? string.Empty;
 			}
 		}
 
 		///
 		/// Default position of the scale bar.
 		///
-		private static readonly ScaleBarPosition DefaultPosition = ScaleBarPosition.BottomLeft;
+		private static readonly ScaleBarPositionEnum DefaultScaleBarPosition = ScaleBarPositionEnum.BottomLeft;
+		private static readonly ScaleBarModeEnum DefaultScaleBarMode = ScaleBarModeEnum.Single;
 
-		private static readonly double LatitudeRedrawThreshold = 0.2;
+		//static readonly double LatitudeRedrawThreshold = 0.2;
 
-		private readonly MapPosition currentMapPosition = new MapPosition();
-		private MapPosition prevMapPosition;
-		protected IUnitConverter unitConverter;
-		protected readonly Map map;
-		private int marginHorizontal;
-		private int marginVertical;
-		protected bool redrawNeeded;
-		protected ScaleBarPosition position;
+		protected IUnitConverter _unitConverter;
+		protected IUnitConverter _secondaryUnitConverter;
+		protected bool _redrawNeeded;
+		protected ScaleBarPositionEnum _scaleBarPosition;
+		protected ScaleBarModeEnum _scaleBarMode;
+		int _marginHorizontal;
+		int _marginVertical;
+		Color _foregroundColor = new Color(0, 0, 0);
+		Color _backgroundColor = new Color(255, 255, 255);
+		object _image;
+		int _width;
+		int _height;
+		double _lastResolution = double.MaxValue;
 
-		public ScaleBarOverlay(Map map, int width, int height)
+		public ScaleBarOverlay()
 		{
-			this.map = map;
+			_scaleBarPosition = DefaultScaleBarPosition;
+			_scaleBarMode = DefaultScaleBarMode;
 
-			position = DefaultPosition;
+			Enabled = true;
+			Exclusive = false;
 
-			unitConverter = MetricUnitConverter.Instance;
-			redrawNeeded = true;
+			Name = "ScaleBarOverlay";
+
+			_unitConverter = MetricUnitConverter.Instance;
+			_redrawNeeded = true;
+		}
+
+		public object Image
+		{
+			get
+			{
+				return _image;
+			}
+			set
+			{
+				if (_image == value)
+					return;
+
+				_image = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public int Width
+		{
+			get
+			{
+				return _width;
+			}
+			set
+			{
+				if (_width == value)
+					return;
+
+				_width = value;
+				_redrawNeeded = true;
+				OnPropertyChanged();
+			}
+		}
+
+		public int Height
+		{
+			get
+			{
+				return _height;
+			}
+			set
+			{
+				if (_height == value)
+					return;
+
+				_height = value;
+				_redrawNeeded = true;
+				OnPropertyChanged();
+			}
+		}
+
+		public Color ForegroundColor
+		{
+			get
+			{
+				return _foregroundColor;
+			}
+			set
+			{
+				if (_foregroundColor == value)
+					return;
+				_foregroundColor = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public Color BackgroundColor
+		{
+			get
+			{
+				return _backgroundColor;
+			}
+			set
+			{
+				if (_backgroundColor == value)
+					return;
+				_backgroundColor = value;
+				OnPropertyChanged();
+			}
 		}
 
 		public IUnitConverter UnitConverter
 		{
-			get { return unitConverter; }
+			get { return _unitConverter; }
 			set
 			{
 				if (value == null)
 				{
 					throw new ArgumentNullException("UnitConverter must not be null");
 				}
-				if (unitConverter == value)
+				if (_unitConverter == value)
 				{
 					return;
 				}
 
-				unitConverter = value;
-				redrawNeeded = true;
+				_unitConverter = value;
+				_redrawNeeded = true;
+			}
+		}
+
+		public IUnitConverter SecondaryUnitConverter
+		{
+			get { return _secondaryUnitConverter; }
+			set
+			{
+				if (_secondaryUnitConverter == value)
+				{
+					return;
+				}
+
+				_secondaryUnitConverter = value;
+				_redrawNeeded = true;
 			}
 		}
 
@@ -77,205 +189,216 @@ namespace Mapsui.Overlays
 		{
 			get
 			{
-				return marginHorizontal;
+				return _marginHorizontal;
 			}
 			set
 			{
-				if (marginHorizontal == value)
+				if (_marginHorizontal == value)
 				{
 					return;
 				}
 
-				marginHorizontal = value;
-				redrawNeeded = true;
+				_marginHorizontal = value;
+				_redrawNeeded = true;
 			}
 		}
-	
+
 		public int MarginVertical
 		{
 			get
 			{
-				return marginVertical;
+				return _marginVertical;
 			}
 			set
 			{
-				if (marginVertical == value)
+				if (_marginVertical == value)
 				{
 					return;
 				}
 
-				marginVertical = value;
-				redrawNeeded = true;
+				_marginVertical = value;
+				_redrawNeeded = true;
 			}
 		}
 
-		public ScaleBarPosition Position
+		public ScaleBarPositionEnum ScaleBarPosition
 		{
 			get
 			{
-				return position;
+				return _scaleBarPosition;
 			}
 			set
 			{
-				if (position == value)
+				if (_scaleBarPosition == value)
 				{
 					return;
 				}
 
-				position = value;
-				redrawNeeded = true;
+				_scaleBarPosition = value;
+				_redrawNeeded = true;
 			}
 		}
 
-		private int CalculatePositionLeft(int left, int right, int width)
+		public int PosX { get; set; }
+		public int PosY { get; set; }
+
+		public ScaleBarModeEnum ScaleBarMode
 		{
-			switch (position)
+			get
 			{
-				case ScaleBarPosition.BottomLeft:
-				case ScaleBarPosition.TopLeft:
-					return marginHorizontal;
-
-				case ScaleBarPosition.BottomCenter:
-				case ScaleBarPosition.TopCenter:
-					return (right - left - width) / 2;
-
-				case ScaleBarPosition.BottomRight:
-				case ScaleBarPosition.TopRight:
-					return right - left - width - marginHorizontal;
+				return _scaleBarMode;
 			}
-
-			throw new ArgumentException("Unknown horizontal position: " + position);
-		}
-
-		private int CalculatePositionTop(int top, int bottom, int height)
-		{
-			switch (position)
+			set
 			{
-				case ScaleBarPosition.TopCenter:
-				case ScaleBarPosition.TopLeft:
-				case ScaleBarPosition.TopRight:
-					return marginVertical;
+				if (_scaleBarMode == value)
+				{
+					return;
+				}
 
-				case ScaleBarPosition.BottomCenter:
-				case ScaleBarPosition.BottomLeft:
-				case ScaleBarPosition.BottomRight:
-					return bottom - top - height - marginVertical;
+				_scaleBarMode = value;
+				_redrawNeeded = true;
 			}
-
-			throw new ArgumentException("Unknown vertical position: " + position);
 		}
 
 		/**
-		 * Calculates the required length and value of the scalebar
+		 * Determines if a redraw is necessary or not
 		 *
-		 * @param unitAdapter the DistanceUnitAdapter to calculate for
+		 * @return true if redraw is necessary, false otherwise
+		 */
+		public bool RedrawNeeded
+		{
+			get
+			{
+				return _redrawNeeded;
+			}
+			//		if (this.redrawNeeded || this.prevMapPosition == null)
+			//		{
+			//			return true;
+			//		}
+
+			//		this.map.getMapPosition(this.currentMapPosition);
+			//		if (this.currentMapPosition.getScale() != this.prevMapPosition.getScale())
+			//		{
+			//			return true;
+			//		}
+
+			//		double latitudeDiff = Math.abs(this.currentMapPosition.getLatitude() - this.prevMapPosition.getLatitude());
+			//		return latitudeDiff > LatitudeRedrawThreshold;
+			set
+			{
+				if (_redrawNeeded == value)
+				{
+					return;
+				}
+
+				_redrawNeeded = value;
+			}
+		}
+
+		public int CalculatePositionLeft(int left, int right, int width)
+		{
+			switch (_scaleBarPosition)
+			{
+				case ScaleBarPositionEnum.BottomLeft:
+				case ScaleBarPositionEnum.TopLeft:
+					return _marginHorizontal;
+
+				case ScaleBarPositionEnum.BottomCenter:
+				case ScaleBarPositionEnum.TopCenter:
+					return (right - left - width) / 2;
+
+				case ScaleBarPositionEnum.BottomRight:
+				case ScaleBarPositionEnum.TopRight:
+					return right - left - width - _marginHorizontal;
+				case ScaleBarPositionEnum.XYCenter:
+				case ScaleBarPositionEnum.XYLeft:
+				case ScaleBarPositionEnum.XYRight:
+					return PosX;
+			}
+
+			throw new ArgumentException("Unknown horizontal position: " + _scaleBarPosition);
+		}
+
+		public int CalculatePositionTop(int top, int bottom, int height)
+		{
+			switch (_scaleBarPosition)
+			{
+				case ScaleBarPositionEnum.TopCenter:
+				case ScaleBarPositionEnum.TopLeft:
+				case ScaleBarPositionEnum.TopRight:
+					return _marginVertical;
+
+				case ScaleBarPositionEnum.BottomCenter:
+				case ScaleBarPositionEnum.BottomLeft:
+				case ScaleBarPositionEnum.BottomRight:
+					return bottom - top - height - _marginVertical;
+				case ScaleBarPositionEnum.XYCenter:
+				case ScaleBarPositionEnum.XYLeft:
+				case ScaleBarPositionEnum.XYRight:
+					return PosY;
+			}
+
+			throw new ArgumentException("Unknown vertical position: " + _scaleBarPosition);
+		}
+
+		/// Calculates the required length and value of the scalebar
+		///
+		/// @param viewport the Viewport to calculate for
+		/// @param width of the scale bar in pixel to calculate for
+		/// @param unitConverter the DistanceUnitConverter to calculate for
+		/// @return a {@link ScaleBarLengthAndValue} object containing the required scaleBarLength and scaleBarValue
+		public ScaleBarLengthAndValue CalculateScaleBarLengthAndValue(IViewport viewport, int width, IUnitConverter unitConverter)
+		{
+			// Get current position
+			var position = Projection.SphericalMercator.ToLonLat(viewport.Center.X, viewport.Center.Y);
+
+			// Calc ground resolution in meters per pixel of viewport for this latitude
+			double groundResolution = viewport.Resolution * Math.Cos(position.Y / 180.0 * Math.PI);
+
+			// Convert in units of UnitConverter
+			groundResolution = groundResolution / unitConverter.MeterRatio;
+
+			int[] scaleBarValues = unitConverter.ScaleBarValues;
+
+			int scaleBarLength = 0;
+			int mapScaleValue = 0;
+
+			foreach (int scaleBarValue in scaleBarValues)
+			{
+				mapScaleValue = scaleBarValue;
+				scaleBarLength = (int)(mapScaleValue / groundResolution);
+				if (scaleBarLength < (width - 10))
+				{
+					break;
+				}
+			}
+
+			var mapScaleText = unitConverter.GetScaleText(mapScaleValue);
+
+			return new ScaleBarLengthAndValue(scaleBarLength, mapScaleValue, mapScaleText);
+		}
+
+		/**
+		 * Calculates the required length and value of the scalebar using the current {@link DistanceUnitAdapter}
+		 *
 		 * @return a {@link ScaleBarLengthAndValue} object containing the required scaleBarLength and scaleBarValue
 		 */
-		protected ScaleBarLengthAndValue calculateScaleBarLengthAndValue(DistanceUnitAdapter unitAdapter)
+		public ScaleBarLengthAndValue CalculateScaleBarLengthAndValue(IViewport viewport, int width)
+		{
+			return CalculateScaleBarLengthAndValue(viewport, width, UnitConverter);
+		}
+
+		public override void ViewChanged(bool majorChange, BoundingBox extent, double resolution)
+		{
+			// If resolution changes, than we need a redraw
+			if (_lastResolution != resolution)
 			{
-				this.prevMapPosition = this.map.getMapPosition();
-				double groundResolution = MercatorProjection.groundResolution(this.prevMapPosition);
-
-				groundResolution = groundResolution / unitAdapter.getMeterRatio();
-				int[] scaleBarValues = unitAdapter.getScaleBarValues();
-
-				int scaleBarLength = 0;
-				int mapScaleValue = 0;
-
-				for (int scaleBarValue : scaleBarValues)
-				{
-					mapScaleValue = scaleBarValue;
-					scaleBarLength = (int)(mapScaleValue / groundResolution);
-					if (scaleBarLength < (this.mapScaleBitmap.getWidth() - 10))
-					{
-						break;
-					}
-				}
-
-				return new ScaleBarLengthAndValue(scaleBarLength, mapScaleValue);
+				_lastResolution = resolution;
+				_redrawNeeded = true;
 			}
 
-			/**
-			 * Calculates the required length and value of the scalebar using the current {@link DistanceUnitAdapter}
-			 *
-			 * @return a {@link ScaleBarLengthAndValue} object containing the required scaleBarLength and scaleBarValue
-			 */
-			protected ScaleBarLengthAndValue calculateScaleBarLengthAndValue()
-			{
-				return calculateScaleBarLengthAndValue(this.DistanceUnitAdapter);
-			}
-
-			/**
-			 * @param canvas The canvas to use to draw the MapScaleBar
-			 */
-			public void draw(Canvas canvas)
-			{
-				if (!this.visible)
-				{
-					return;
-				}
-
-				if (this.map.getHeight() == 0)
-				{
-					return;
-				}
-
-				if (this.isRedrawNecessary())
-				{
-					redraw(this.mapScaleCanvas);
-					this.redrawNeeded = false;
-				}
-
-				int positionLeft = calculatePositionLeft(0, this.map.getWidth(), this.mapScaleBitmap.getWidth());
-				int positionTop = calculatePositionTop(0, this.map.getHeight(), this.mapScaleBitmap.getHeight());
-
-				canvas.drawBitmap(this.mapScaleBitmap, positionLeft, positionTop);
-			}
-
-			/**
-			 * The scalebar is redrawn now.
-			 */
-			public void drawScaleBar()
-			{
-				draw(mapScaleCanvas);
-			}
-
-			/**
-			 * The scalebar will be redrawn on the next draw()
-			 */
-			public void redrawScaleBar()
-			{
-				this.redrawNeeded = true;
-			}
-
-			/**
-			 * Determines if a redraw is necessary or not
-			 *
-			 * @return true if redraw is necessary, false otherwise
-			 */
-			protected boolean isRedrawNecessary()
-			{
-				if (this.redrawNeeded || this.prevMapPosition == null)
-				{
-					return true;
-				}
-
-				this.map.getMapPosition(this.currentMapPosition);
-				if (this.currentMapPosition.getScale() != this.prevMapPosition.getScale())
-				{
-					return true;
-				}
-
-				double latitudeDiff = Math.abs(this.currentMapPosition.getLatitude() - this.prevMapPosition.getLatitude());
-				return latitudeDiff > LatitudeRedrawThreshold;
-			}
-
-			/**
-			 * Redraw the map scale bar.
-			 * Make sure you always apply scale factor to all coordinates and dimensions.
-			 *
-			 * @param canvas The canvas to draw on
-			 */
-			protected abstract void redraw(Canvas canvas);
+			// TODO
+			// If Center changes for mor than 0.2 degrees, we need a redraw
 		}
 	}
+}

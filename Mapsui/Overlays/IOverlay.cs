@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Mapsui.Fetcher;
+using Mapsui.Geometries;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -33,5 +35,7 @@ namespace Mapsui.Overlays
 		bool Exclusive { get; set; }
 
 		double Opacity { get; set; }
+
+		void ViewChanged(bool majorChange, BoundingBox extent, double resolution);
 	}
 }

@@ -17,6 +17,13 @@ namespace Mapsui.Samples.Android
 			var mapControl = FindViewById<MapControl>(Resource.Id.mapcontrol);
 			mapControl.Map = InfoLayersSample.CreateMap();
 			mapControl.Map.Overlays.Add(new CenterOverlay() { ForegroundColor = new Styles.Color(255, 0, 255) });
-        }
-    }
+			mapControl.Map.Overlays.Add(new ScaleBarOverlay() { Width = 100, ForegroundColor = new Styles.Color(255, 0, 255), ScaleBarMode = ScaleBarOverlay.ScaleBarModeEnum.Single, SecondaryUnitConverter = ImperialUnitConverter.Instance, ScaleBarPosition = ScaleBarOverlay.ScaleBarPositionEnum.BottomRight });
+			mapControl.Map.Overlays.Add(new ScaleBarOverlay() { Width = 200, ForegroundColor = new Styles.Color(255, 0, 255), BackgroundColor = new Styles.Color(255, 255, 0), ScaleBarMode = ScaleBarOverlay.ScaleBarModeEnum.Both, SecondaryUnitConverter = NauticalUnitConverter.Instance, ScaleBarPosition = ScaleBarOverlay.ScaleBarPositionEnum.BottomCenter });
+			mapControl.Map.Overlays.Add(new ScaleBarOverlay() { Width = 100, ForegroundColor = new Styles.Color(255, 0, 255), BackgroundColor = new Styles.Color(255, 255, 0), ScaleBarMode = ScaleBarOverlay.ScaleBarModeEnum.Single, SecondaryUnitConverter = ImperialUnitConverter.Instance, ScaleBarPosition = ScaleBarOverlay.ScaleBarPositionEnum.BottomLeft });
+			mapControl.Map.Overlays.Add(new ScaleBarOverlay() { Width = 100, ForegroundColor = new Styles.Color(255, 0, 255), ScaleBarMode = ScaleBarOverlay.ScaleBarModeEnum.Both, SecondaryUnitConverter = ImperialUnitConverter.Instance, ScaleBarPosition = ScaleBarOverlay.ScaleBarPositionEnum.TopRight });
+			mapControl.Map.Overlays.Add(new ScaleBarOverlay() { Width = 200, ForegroundColor = new Styles.Color(255, 0, 255), BackgroundColor = new Styles.Color(255, 255, 0), ScaleBarMode = ScaleBarOverlay.ScaleBarModeEnum.Single, SecondaryUnitConverter = ImperialUnitConverter.Instance, ScaleBarPosition = ScaleBarOverlay.ScaleBarPositionEnum.TopCenter });
+			mapControl.Map.Overlays.Add(new ScaleBarOverlay() { Width = 100, ForegroundColor = new Styles.Color(255, 0, 255), BackgroundColor = new Styles.Color(255, 255, 0), ScaleBarMode = ScaleBarOverlay.ScaleBarModeEnum.Both, SecondaryUnitConverter = NauticalUnitConverter.Instance, ScaleBarPosition = ScaleBarOverlay.ScaleBarPositionEnum.TopLeft });
+			mapControl.Map.Overlays.Add(new ScaleBarOverlay() { Width = 100, PosX = 250, PosY = 400, ForegroundColor = new Styles.Color(0, 0, 0), BackgroundColor = new Styles.Color(255, 255, 255), ScaleBarMode = ScaleBarOverlay.ScaleBarModeEnum.Both, SecondaryUnitConverter = NauticalUnitConverter.Instance, ScaleBarPosition = ScaleBarOverlay.ScaleBarPositionEnum.XYCenter });
+		}
+	}
 }
