@@ -30,8 +30,8 @@ namespace Mapsui.Samples.Common
                 ["Empty Map"] = () => EmptyMapSample.CreateMap(),
                 ["Mutating triangle"] = () => MutatingTriangleSample.CreateMap(),
                 ["Symbols in World Units"] = () => SymbolsInWorldUnitsSample.CreateMap(),
-
-            };
+				["Overlays"] = () => OverlaysSample.CreateMap(),
+			};
         }
     }
 }

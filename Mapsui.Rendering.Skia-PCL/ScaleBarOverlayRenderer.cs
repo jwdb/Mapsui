@@ -77,8 +77,8 @@ namespace Mapsui.Rendering.Skia
 				SKCanvas bitmapCanvas = new SKCanvas(scaleBarBitmap);
 
 				// Draw a rect around the scale bar for testing
-				//var tempPaint = new SKPaint() { StrokeWidth = 1, Color = SKColors.White, IsStroke = true };
-				//bitmapCanvas.DrawRect(new SKRect(scaleBarMargin*scale, scaleBarMargin*scale, overlay.Width-scaleBarMargin*scale, scaleBarHeight - scaleBarMargin*scale), tempPaint);
+				var tempPaint = new SKPaint() { StrokeWidth = 1, Color = SKColors.Blue, IsStroke = true };
+				bitmapCanvas.DrawRect(new SKRect(scaleBarMargin*scale, scaleBarMargin*scale, overlay.Width-scaleBarMargin*scale, scaleBarHeight - scaleBarMargin*scale), tempPaint);
 
 				DrawScaleBar(bitmapCanvas, overlay, scaleBarHeight, lengthAndValue.ScaleBarLength, lengthAndValue2.ScaleBarLength, paintScaleBarStroke, scale);
 				DrawScaleBar(bitmapCanvas, overlay, scaleBarHeight, lengthAndValue.ScaleBarLength, lengthAndValue2.ScaleBarLength, paintScaleBar, scale);
