@@ -127,6 +127,7 @@ namespace Mapsui.UI.Wpf
                     Renderer = new Rendering.Xaml.MapRenderer();
                     RefreshGraphics();
                 }
+                OnPropertyChanged();
             }
         }
 
@@ -216,6 +217,7 @@ namespace Mapsui.UI.Wpf
 
         private void InitAnimation()
         {
+            _zoomAnimation.Completed += ZoomAnimationCompleted;
             _zoomAnimation.Duration = new Duration(new TimeSpan(0, 0, 0, 0, 1000));
             _zoomAnimation.EasingFunction = new QuarticEase();
             Storyboard.SetTarget(_zoomAnimation, this);
@@ -225,7 +227,7 @@ namespace Mapsui.UI.Wpf
 
         private void MapControlMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (ZoomLock) return;
+            if (Map.ZoomLock) return;
             if (!Viewport.HasSize) return;
 
             _currentMousePosition = e.GetPosition(this).ToMapsui();
@@ -256,7 +258,6 @@ namespace Mapsui.UI.Wpf
             _zoomStoryBoard.Pause(); //using Stop() here causes unexpected results while zooming very fast.
             _zoomAnimation.From = begin;
             _zoomAnimation.To = end;
-            _zoomAnimation.Completed += ZoomAnimationCompleted;
             _zoomStoryBoard.Begin();
         }
 
@@ -302,7 +303,7 @@ namespace Mapsui.UI.Wpf
                 if (IsClick(_currentMousePosition, _downMousePosition))
                 {
                     HandleFeatureInfo(e);
-                    OnInfo(InvokeInfo(Map.Layers.Where(l => l.IsMapInfoLayer), Map.Widgets, Viewport,
+                    OnInfo(InvokeInfo(Map.Layers.Where(l => l.IsMapInfoLayer), Map.GetWidgetsOfMapAndLayers(), Viewport,
                         touchPosition, _downMousePosition, Renderer.SymbolCache, WidgetTouched, e.ClickCount));
                 }
             }
@@ -346,7 +347,7 @@ namespace Mapsui.UI.Wpf
                 // todo: Pass the touchDown position. It needs to be set at touch down.
 
                 // todo: Figure out how to do a number of taps for WPF
-                OnInfo(InvokeInfo(Map.Layers.Where(l => l.IsMapInfoLayer), Map.Widgets, Viewport, 
+                OnInfo(InvokeInfo(Map.Layers.Where(l => l.IsMapInfoLayer), Map.GetWidgetsOfMapAndLayers(), Viewport, 
                     touchPosition, touchPosition, Renderer.SymbolCache, 
                     WidgetTouched, 1));
             }
@@ -385,7 +386,7 @@ namespace Mapsui.UI.Wpf
 
             _currentMousePosition = e.GetPosition(this).ToMapsui(); //Needed for both MouseMove and MouseWheel event
 
-            if (_mouseDown && !PanLock)
+            if (_mouseDown)
             {
                 if (_previousMousePosition == null || _previousMousePosition.IsEmpty())
                 {
@@ -397,7 +398,6 @@ namespace Mapsui.UI.Wpf
                 
                 _viewport.Transform(_currentMousePosition, _previousMousePosition);
                 RefreshGraphics();
-
                 _previousMousePosition = _currentMousePosition;
             }
         }
@@ -465,6 +465,7 @@ namespace Mapsui.UI.Wpf
         private void OnManipulationStarted(object sender, ManipulationStartedEventArgs e)
         {
             _hasBeenManipulated = false;
+            _innerRotation = _viewport.Rotation;
         }
 
         private void OnManipulationDelta(object sender, ManipulationDeltaEventArgs e)
@@ -482,7 +483,7 @@ namespace Mapsui.UI.Wpf
 
             double rotationDelta = 0;
 
-            if (!RotationLock)
+            if (!Map.RotationLock)
             {
                 _innerRotation += angle - prevAngle;
                 _innerRotation %= 360;
@@ -505,13 +506,12 @@ namespace Mapsui.UI.Wpf
 
             _viewport.Transform(center, previousCenter, radius / previousRadius, rotationDelta);
             RefreshGraphics();
-
             e.Handled = true;
         }
 
         private double GetDeltaScale(XamlVector scale)
         {
-            if (ZoomLock) return 1;
+            if (Map.ZoomLock) return 1;
             var deltaScale = (scale.X + scale.Y) / 2;
             if (Math.Abs(deltaScale) < Constants.Epsilon)
                 return 1; // If there is no scaling the deltaScale will be 0.0 in Windows Phone (while it is 1.0 in wpf)

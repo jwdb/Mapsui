@@ -10,6 +10,7 @@ using Mapsui.Logging;
 using Mapsui.Rendering;
 using Mapsui.Rendering.Skia;
 using Mapsui.Widgets;
+using System.Runtime.CompilerServices;
 
 #if __ANDROID__
 namespace Mapsui.UI.Android
@@ -18,55 +19,113 @@ namespace Mapsui.UI.iOS
 #elif __UWP__
 namespace Mapsui.UI.Uwp
 #elif __FORMS__
-namespace Mapsui.UI
+namespace Mapsui.UI.Forms
 #else
 namespace Mapsui.UI.Wpf
 #endif
 {
-    public partial class MapControl
+    public partial class MapControl : INotifyPropertyChanged
     {
         private Map _map;
 
-        /// <inheritdoc />
-        public bool PanLock { get; set; }
-
-        /// <inheritdoc />
-        public bool RotationLock { get; set; } = true;
-
-        /// <inheritdoc />
-        public bool ZoomLock { get; set; }
+        private double _unSnapRotationDegrees;
 
         /// <summary>
         /// After how many degrees start rotation to take place
         /// </summary>
-        public double UnSnapRotationDegrees { get; set; }
+        public double UnSnapRotationDegrees
+        {
+            get { return _unSnapRotationDegrees; }
+            set
+            {
+                if (_unSnapRotationDegrees != value)
+                {
+                    _unSnapRotationDegrees = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private double _reSnapRotationDegrees;
 
         /// <summary>
         /// With how many degrees from 0 should map snap to 0 degrees
         /// </summary>
-        public double ReSnapRotationDegrees { get; set; }
-        
-        public IRenderer Renderer { get; set; } = new MapRenderer();
+        public double ReSnapRotationDegrees
+        {
+            get { return _reSnapRotationDegrees; }
+            set
+            {
+                if (_reSnapRotationDegrees != value)
+                {
+                    _reSnapRotationDegrees = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private IRenderer _renderer = new MapRenderer();
 
         /// <summary>
-        /// Viewport holding informations about visible part of the map. Viewport can never be null.
+        /// Renderer that is used from this MapControl
         /// </summary>
+        public IRenderer Renderer
+        {
+            get { return _renderer; }
+            set
+            {
+                if (_renderer != value)
+                {
+                    _renderer = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private readonly LimitedViewport _viewport = new LimitedViewport();
 
+        /// <summary>
+        /// Viewport holding information about visible part of the map. Viewport can never be null.
+        /// </summary>
         public IReadOnlyViewport Viewport => _viewport;
 
-
+        /// <summary>
+        /// Handles all manipulations of the map viewport
+        /// </summary>
         public INavigator Navigator { get; private set; }
 
+        /// <summary>
+        /// Called when the viewport is initialized
+        /// </summary>
         public event EventHandler ViewportInitialized; //todo: Consider to use the Viewport PropertyChanged
 
         /// <summary>
-        ///  Called whenever a feature in one of the layers in InfoLayers is hitten by a click 
+        /// Called whenever a feature in one of the layers in InfoLayers is hitten by a click 
         /// </summary>
         public event EventHandler<MapInfoEventArgs> Info;
 
         /// <summary>
-        /// Unsubscribe from map events </summary>
+        /// Called whenever a property is changed
+        /// </summary>
+#if __FORMS__
+        public new event PropertyChangedEventHandler PropertyChanged;
+
+        protected override void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+#else
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+#endif
+
+        /// <summary>
+        /// Unsubscribe from map events 
+        /// </summary>
         public void Unsubscribe()
         {
             UnsubscribeFromMapEvents(_map);
@@ -97,6 +156,9 @@ namespace Mapsui.UI.Wpf
             }
         }
 
+        /// <summary>
+        /// Refresh data of the map and than repaint it
+        /// </summary>
         public void Refresh()
         {
             RefreshData();
@@ -136,6 +198,7 @@ namespace Mapsui.UI.Wpf
                 }
             });
         }
+        // ReSharper disable RedundantNameQualifier - needed for iOS for disambiguation
 
         private void MapPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -160,7 +223,11 @@ namespace Mapsui.UI.Wpf
                 Refresh();
             }
         }
+        // ReSharper restore RedundantNameQualifier
 
+        /// <summary>
+        /// Map holding data for which is shown in this MapControl
+        /// </summary>
         public Map Map
         {
             get => _map;
@@ -184,6 +251,7 @@ namespace Mapsui.UI.Wpf
                 }
 
                 Refresh();
+                OnPropertyChanged();
             }
         }
 
@@ -206,19 +274,12 @@ namespace Mapsui.UI.Wpf
             ViewportInitialized?.Invoke(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Refresh data of Map, but don't paint it
+        /// </summary>
         public void RefreshData()
         {
             _map?.RefreshData(Viewport.Extent, Viewport.Resolution, true);
-        }
-
-        /// <summary>
-        /// Internally we want to call RefreshData with a minor change in some cases.
-        /// Users should just always call RefreshData without arguments
-        /// </summary>
-        /// <param name="majorChange"></param>
-        private void RefreshData(bool majorChange)
-        {
-            _map?.RefreshData(Viewport.Extent, Viewport.Resolution, majorChange);
         }
 
         private void OnInfo(MapInfoEventArgs mapInfoEventArgs)
@@ -228,14 +289,18 @@ namespace Mapsui.UI.Wpf
             Info?.Invoke(this, mapInfoEventArgs);
         }
 
-        private void WidgetTouched(IWidget widget, Point screenPosition)
+        private bool WidgetTouched(IWidget widget, Point screenPosition)
         {
-            if (widget is Hyperlink hyperlink)
+            var result = widget.HandleWidgetTouched(Navigator, screenPosition);
+
+            if (!result && widget is Hyperlink hyperlink && !string.IsNullOrWhiteSpace(hyperlink.Url))
             {
                 OpenBrowser(hyperlink.Url);
+
+                return true;
             }
 
-            widget.HandleWidgetTouched(Navigator, screenPosition);
+            return false;
         }
 
         /// <inheritdoc />
@@ -266,23 +331,27 @@ namespace Mapsui.UI.Wpf
         /// <returns>True, if something done </returns>
         private static MapInfoEventArgs InvokeInfo(IEnumerable<ILayer> layers, IEnumerable<IWidget> widgets, 
             IReadOnlyViewport viewport, Point screenPosition, Point startScreenPosition, ISymbolCache symbolCache,
-            Action<IWidget, Point> widgetCallback, int numTaps)
+            Func<IWidget, Point, bool> widgetCallback, int numTaps)
         {
             var layerWidgets = layers.Select(l => l.Attribution).Where(a => a != null);
             var allWidgets = layerWidgets.Concat(widgets).ToList(); // Concat layer widgets and map widgets.
 
             // First check if a Widget is clicked. In the current design they are always on top of the map.
-            var widget = WidgetTouch.GetTouchedWidget(screenPosition, startScreenPosition, allWidgets);
-            if (widget != null)
-            {
-                // todo:
-                // How should widgetCallback have a handled type thing?
-                // Widgets should be iterated through rather than getting a single widget, 
-                // based on Z index and then called until handled = true; Ordered By highest Z
-                widgetCallback(widget, screenPosition);
-                return null;
-            }
+            var touchedWidgets = WidgetTouch.GetTouchedWidget(screenPosition, startScreenPosition, allWidgets);
 
+            foreach (var widget in touchedWidgets)
+            {
+                var result = widgetCallback(widget, screenPosition);
+
+                if (result)
+                {
+                    return new MapInfoEventArgs
+                    {
+                        Handled = true
+                    };
+                }
+            }
+        
             var mapInfo = MapInfoHelper.GetMapInfo(layers, viewport, screenPosition, symbolCache);
 
             if (mapInfo != null)
@@ -312,6 +381,9 @@ namespace Mapsui.UI.Wpf
             Refresh();
         }
 
+        /// <summary>
+        /// Clear cache and repaint map
+        /// </summary>
         public void Clear()
         {
             // not sure if we need this method

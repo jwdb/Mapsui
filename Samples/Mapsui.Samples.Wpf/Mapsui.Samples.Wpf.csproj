@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Mapsui.Samples.Wpf</RootNamespace>
     <AssemblyName>Mapsui.Samples.Wpf</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -99,11 +99,11 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BruTile, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\BruTile.2.0.1\lib\net45\BruTile.dll</HintPath>
+    <Reference Include="BruTile, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\BruTile.2.0.2\lib\net45\BruTile.dll</HintPath>
     </Reference>
-    <Reference Include="BruTile.MbTiles, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\BruTile.MbTiles.2.0.1\lib\net45\BruTile.MbTiles.dll</HintPath>
+    <Reference Include="BruTile.MbTiles, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\BruTile.MbTiles.2.0.2\lib\net45\BruTile.MbTiles.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -149,6 +149,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq">
@@ -221,7 +222,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -248,10 +251,6 @@
       <Project>{d74c052a-c07e-4b37-a898-134218aca5c9}</Project>
       <Name>Mapsui</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Sample\Mapsui.Samples.CustomWidget\Mapsui.Samples.CustomWidget.csproj">
-      <Project>{ba6ecdb7-674e-42cb-9e56-56c55fed269b}</Project>
-      <Name>Mapsui.Samples.CustomWidget</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Tests\Mapsui.Tests.Common\Mapsui.Tests.Common.csproj">
       <Project>{81BB36D2-4D01-44E3-9024-E7CBD10DA316}</Project>
       <Name>Mapsui.Tests.Common</Name>
@@ -263,6 +262,10 @@
     <ProjectReference Include="..\Mapsui.Samples.Common\Mapsui.Samples.Common.csproj">
       <Project>{508ae811-a03a-4138-8ccc-abde03c67010}</Project>
       <Name>Mapsui.Samples.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mapsui.Samples.CustomWidget\Mapsui.Samples.CustomWidget.csproj">
+      <Project>{3eb5d6aa-8b52-4e93-9000-61eee6d6b044}</Project>
+      <Name>Mapsui.Samples.CustomWidget</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

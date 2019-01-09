@@ -75,14 +75,14 @@ namespace Mapsui.UI.iOS
         private void OnDoubleTapped(UITapGestureRecognizer gesture)
         {
             var position = GetScreenPosition(gesture.LocationInView(this));
-            OnInfo(InvokeInfo(Map.Layers.Where(l => l.IsMapInfoLayer), Map.Widgets, Viewport, 
+            OnInfo(InvokeInfo(Map.Layers.Where(l => l.IsMapInfoLayer), Map.GetWidgetsOfMapAndLayers(), Viewport, 
                 position, position, Renderer.SymbolCache, WidgetTouched, 2));
         }
         
         private void OnSingleTapped(UITapGestureRecognizer gesture)
         {
             var position = GetScreenPosition(gesture.LocationInView(this));
-            OnInfo(InvokeInfo(Map.Layers.Where(l => l.IsMapInfoLayer), Map.Widgets, Viewport, 
+            OnInfo(InvokeInfo(Map.Layers.Where(l => l.IsMapInfoLayer), Map.GetWidgetsOfMapAndLayers(), Viewport, 
                 position, position, Renderer.SymbolCache, WidgetTouched, 1));
         }
        
@@ -110,10 +110,10 @@ namespace Mapsui.UI.iOS
             {
                 if (touches.AnyObject is UITouch touch)
                 {
-                    var currentPos = touch.LocationInView(this);
-                    var previousPos = touch.PreviousLocationInView(this);
+                    var position = touch.LocationInView(this).ToMapsui();
+                    var previousPosition = touch.PreviousLocationInView(this).ToMapsui();
 
-                    _viewport.Transform(currentPos.X, currentPos.Y, previousPos.X, previousPos.Y);
+                    _viewport.Transform(position, previousPosition);
                     RefreshGraphics();
 
                     _innerRotation = Viewport.Rotation;
@@ -121,20 +121,20 @@ namespace Mapsui.UI.iOS
             }
             else if (evt.AllTouches.Count >= 2)
             {
-                var prevLocations = evt.AllTouches.Select(t => ((UITouch)t).PreviousLocationInView(this))
+                var previousLocation = evt.AllTouches.Select(t => ((UITouch)t).PreviousLocationInView(this))
                                            .Select(p => new Point(p.X, p.Y)).ToList();
 
                 var locations = evt.AllTouches.Select(t => ((UITouch)t).LocationInView(this))
                                         .Select(p => new Point(p.X, p.Y)).ToList();
 
-                var (prevCenter, prevRadius, prevAngle) = GetPinchValues(prevLocations);
+                var (previousCenter, previousRadius, previousAngle) = GetPinchValues(previousLocation);
                 var (center, radius, angle) = GetPinchValues(locations);
 
                 double rotationDelta = 0;
 
-                if (!RotationLock)
+                if (!Map.RotationLock)
                 {
-                    _innerRotation += angle - prevAngle;
+                    _innerRotation += angle - previousAngle;
                     _innerRotation %= 360;
 
                     if (_innerRotation > 180)
@@ -153,7 +153,7 @@ namespace Mapsui.UI.iOS
                     }
                 }
 
-                _viewport.Transform(center.X, center.Y, prevCenter.X, prevCenter.Y, radius / prevRadius, rotationDelta);
+                _viewport.Transform(center, previousCenter, radius / previousRadius, rotationDelta);
                 RefreshGraphics();
             }
         }
@@ -196,6 +196,7 @@ namespace Mapsui.UI.iOS
                 base.Frame = value;
                 SetViewportSize();
                 Refresh();
+                OnPropertyChanged();
             }
         }
 
