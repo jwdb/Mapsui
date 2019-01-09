@@ -17,16 +17,22 @@ namespace Mapsui.Samples.Forms
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MainPageLarge : ContentPage
     {
-        Dictionary<string, Func<Map>> allSamples;
-        Func<MapView, MapClickedEventArgs, bool> clicker;
+        IEnumerable<ISample> allSamples;
+        Func<object, EventArgs, bool> clicker;
 
         public MainPageLarge()
         {
             InitializeComponent();
 
-            allSamples = Samples.CreateList();
+            allSamples = AllSamples.GetSamples();
 
-            listView.ItemsSource = allSamples.Select(k => k.Key).ToList();
+            var categories = allSamples.Select(s => s.Category).Distinct().OrderBy(c => c);
+            foreach (var category in categories)
+            {
+                picker.Items?.Add(category);
+            }
+            picker.SelectedIndexChanged += PickerSelectedIndexChanged;
+            picker.SelectedItem = "Forms";
 
             mapView.RotationLock = false;
             mapView.UnSnapRotationDegrees = 30;
@@ -37,14 +43,27 @@ namespace Mapsui.Samples.Forms
 
             mapView.MyLocationLayer.UpdateMyLocation(new UI.Forms.Position());
 
+            mapView.IsZoomButtonVisible = true;
+            mapView.IsMyLocationButtonVisible = true;
+            mapView.IsNorthingButtonVisible = true;
+
             StartGPS();
+        }
+
+        private void FillListWithSamples()
+        {
+            var selectedCategory = picker.SelectedItem?.ToString() ?? "";
+            listView.ItemsSource = allSamples.Where(s => s.Category == selectedCategory).Select(x => x.Name);
+        }
+
+        private void PickerSelectedIndexChanged(object sender, EventArgs e)
+        {
+            FillListWithSamples();
         }
 
         private void OnMapClicked(object sender, MapClickedEventArgs e)
         {
             e.Handled = clicker == null ? false : (bool)clicker?.Invoke(sender as MapView, e);
-            //Samples.SetPins(mapView, e);
-            //Samples.DrawPolylines(mapView, e);
         }
 
         void OnSelection(object sender, SelectedItemChangedEventArgs e)
@@ -54,12 +73,17 @@ namespace Mapsui.Samples.Forms
                 return; //ItemSelected is called on deselection, which results in SelectedItem being set to null
             }
 
-            var sample = e.SelectedItem.ToString();
-            var call = allSamples[sample];
+            var sampleName = e.SelectedItem.ToString();
+            var sample = allSamples.Where(x => x.Name == sampleName).FirstOrDefault<ISample>();
 
-            mapView.Map = call();
+            if (sample != null)
+            {
+                sample.Setup(mapView);
+            }
 
-            clicker = Samples.GetClicker(sample);
+            clicker = null;
+            if (sample is IFormsSample)
+                clicker = ((IFormsSample)sample).OnClick;
 
             listView.SelectedItem = null;
         }
@@ -83,6 +107,8 @@ namespace Mapsui.Samples.Forms
 
         public async void StartGPS()
         {
+            if (Device.RuntimePlatform == Device.WPF)
+                return;
             // Start GPS
             await CrossGeolocator.Current.StartListeningAsync(TimeSpan.FromSeconds(1),
                     1,
@@ -104,6 +130,9 @@ namespace Mapsui.Samples.Forms
 
         public async void StopGPS()
         {
+            if (Device.RuntimePlatform == Device.WPF)
+                return;
+
             // Stop GPS
             if (CrossGeolocator.Current.IsListening)
             {
@@ -130,7 +159,7 @@ namespace Mapsui.Samples.Forms
             Device.BeginInvokeOnMainThread(() =>
             {
                 mapView.MyLocationLayer.UpdateMyLocation(new UI.Forms.Position(e.Position.Latitude, e.Position.Longitude));
-                mapView.MyLocationLayer.UpdateMyDirection(e.Position.Heading, mapView.Map.Viewport.Rotation);
+                mapView.MyLocationLayer.UpdateMyDirection(e.Position.Heading, mapView.Viewport.Rotation);
                 mapView.MyLocationLayer.UpdateMySpeed(e.Position.Speed);
             });
         }

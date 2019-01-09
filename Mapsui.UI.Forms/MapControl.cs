@@ -1,16 +1,17 @@
-using Mapsui.Rendering.Skia;
+using Mapsui.Rendering;
+using Mapsui.UI.Utils;
+using SkiaSharp;
+using SkiaSharp.Views.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Mapsui.Widgets;
-using SkiaSharp.Views.Forms;
 using Xamarin.Forms;
-using SkiaSharp;
-using Mapsui.Rendering;
-using Mapsui.UI.Utils;
 
 namespace Mapsui.UI.Forms
 {
+    /// <summary>
+    /// Class, that uses the API of all other Mapsui MapControls
+    /// </summary>
     public partial class MapControl : SKGLView, IMapControl, IDisposable
     {
         class TouchEvent
@@ -33,10 +34,9 @@ namespace Mapsui.UI.Forms
         // See http://grepcode.com/file/repository.grepcode.com/java/ext/com.google.android/android/4.0.4_r2.1/android/view/ViewConfiguration.java#ViewConfiguration.0PRESSED_STATE_DURATION for values
         private const int shortTap = 125;
         private const int shortClick = 250;
-        private const int delayTap = 300;
+        private const int delayTap = 200;
         private const int longTap = 500;
 
-        private readonly MapRenderer _renderer = new MapRenderer();
         private float _skiaScale;
         private double _innerRotation;
         private Dictionary<long, TouchEvent> _touches = new Dictionary<long, TouchEvent>();
@@ -66,20 +66,26 @@ namespace Mapsui.UI.Forms
 
         public float SkiaScale => _skiaScale;
 
+        public float PixelDensity => SkiaScale;
+
         public float ScreenWidth => (float)this.Width;
 
         public float ScreenHeight => (float)this.Height;
+
+        private float ViewportWidth => ScreenWidth;
+
+        private float ViewportHeight => ScreenHeight;
 
         public ISymbolCache SymbolCache => _renderer.SymbolCache;
 
         public float PixelsPerDeviceIndependentUnit => SkiaScale;
 
+        public bool UseDoubleTap = true;
+
         public void Initialize()
         {
             Map = new Map();
             BackgroundColor = Color.White;
-
-            TryInitializeViewport();
 
             EnableTouchEvents = true;
 
@@ -88,26 +94,9 @@ namespace Mapsui.UI.Forms
             SizeChanged += OnSizeChanged; 
         }
 
-        private void TryInitializeViewport()
-        {
-            if (_map.Viewport.Initialized) return;
-
-            _skiaScale = (float)(CanvasSize.Width / Width);
-
-            if (_map.Viewport.TryInitializeViewport(_map.Envelope, CanvasSize.Width / _skiaScale, CanvasSize.Height / _skiaScale))
-            {
-                Map.RefreshData(true);
-                OnViewportInitialized();
-            }
-        }
-
         private void OnSizeChanged(object sender, EventArgs e)
         {
-            if (Map != null)
-            {
-                Map.Viewport.Width = Width;
-                Map.Viewport.Height = Height;
-            }
+            SetViewportSize();
         }
 
         private void OnTouch(object sender, SKTouchEventArgs e)
@@ -185,14 +174,14 @@ namespace Mapsui.UI.Forms
                         }
                         else
                             if (!e.Handled)
-                                e.Handled = OnSingleTapped((Geometries.Point)l);
+                            e.Handled = OnSingleTapped((Geometries.Point)l);
                         _numOfTaps = 1;
                         if (_doubleTapTestTimer != null)
                         {
                             _doubleTapTestTimer.Dispose();
                         }
                         _doubleTapTestTimer = null;
-                    }, location, delayTap, -1);
+                    }, location, UseDoubleTap ? delayTap : 0, -1);
                 }
                 else if (_touches[id].Location.Equals(_firstTouch) && ticks - _touches[id].Tick >= longTap * 10000)
                 {
@@ -221,16 +210,12 @@ namespace Mapsui.UI.Forms
 
         void OnPaintSurface(object sender, SKPaintGLSurfaceEventArgs skPaintSurfaceEventArgs)
         {
-            TryInitializeViewport();
-            if (!_map.Viewport.Initialized) return;
 
-            _map.Viewport.Width = Width;
-            _map.Viewport.Height = Height;
-
+            _skiaScale = (float)(CanvasSize.Width / Width);
             skPaintSurfaceEventArgs.Surface.Canvas.Scale(_skiaScale, _skiaScale);
 
             _renderer.Render(skPaintSurfaceEventArgs.Surface.Canvas,
-                _map.Viewport, _map.Layers, _map.Widgets, _map.BackColor);
+                Viewport, _map.Layers, _map.Widgets, _map.BackColor);
         }
 
         private Geometries.Point GetScreenPosition(SKPoint point)
@@ -240,17 +225,7 @@ namespace Mapsui.UI.Forms
 
         public void RefreshGraphics()
         {
-            InvalidateCanvas();
-        }
-
-        internal void InvalidateCanvas()
-        {
-            InvalidateSurface();
-        }
-
-        private static void WidgetTouched(IWidget widget, Geometries.Point screenPosition)
-        {
-            widget.HandleWidgetTouched(screenPosition);
+            RunOnUIThread(() => InvalidateSurface());
         }
 
         /// <summary>
@@ -321,7 +296,7 @@ namespace Mapsui.UI.Forms
         /// <param name="screenPosition">Center of zoom out event</param>
         private bool OnZoomOut(Geometries.Point screenPosition)
         {
-            if (ZoomLock)
+            if (Map.ZoomLock)
             {
                 return true;
             }
@@ -345,7 +320,7 @@ namespace Mapsui.UI.Forms
         /// <param name="screenPosition">Center of zoom in event</param>
         private bool OnZoomIn(Geometries.Point screenPosition)
         {
-            if (ZoomLock)
+            if (Map.ZoomLock)
             {
                 return true;
             }
@@ -427,7 +402,7 @@ namespace Mapsui.UI.Forms
             {
                 (_previousCenter, _previousRadius, _previousAngle) = GetPinchValues(touchPoints);
                 _mode = TouchMode.Zooming;
-                _innerRotation = _map.Viewport.Rotation;
+                _innerRotation = Viewport.Rotation;
             }
             else
             {
@@ -452,9 +427,9 @@ namespace Mapsui.UI.Forms
             // Last touch released
             if (touchPoints.Count == 0)
             {
-                InvalidateCanvas();
+                RefreshGraphics();
                 _mode = TouchMode.None;
-                _map.RefreshData(true);
+                _map.RefreshData(_viewport.Extent, _viewport.Resolution, true);
             }
 
             return args.Handled;
@@ -482,13 +457,11 @@ namespace Mapsui.UI.Forms
 
                         var touchPosition = touchPoints.First();
 
-                        if (!PanLock && _previousCenter != null && !_previousCenter.IsEmpty())
+                        if (!Map.PanLock && _previousCenter != null && !_previousCenter.IsEmpty())
                         {
-                            _map.Viewport.Transform(touchPosition.X, touchPosition.Y, _previousCenter.X, _previousCenter.Y);
+                            _viewport.Transform(touchPosition, _previousCenter);
 
-                            ViewportLimiter.LimitExtent(_map.Viewport, _map.PanMode, _map.PanLimits, _map.Envelope);
-
-                            InvalidateCanvas();
+                            RefreshGraphics();
                         }
 
                         _previousCenter = touchPosition;
@@ -504,7 +477,7 @@ namespace Mapsui.UI.Forms
 
                         double rotationDelta = 0;
 
-                        if (!RotationLock)
+                        if (!Map.RotationLock)
                         {
                             _innerRotation += angle - prevAngle;
                             _innerRotation %= 360;
@@ -514,26 +487,22 @@ namespace Mapsui.UI.Forms
                             else if (_innerRotation < -180)
                                 _innerRotation += 360;
 
-                            if (_map.Viewport.Rotation == 0 && Math.Abs(_innerRotation) >= Math.Abs(UnSnapRotationDegrees))
+                            if (Viewport.Rotation == 0 && Math.Abs(_innerRotation) >= Math.Abs(UnSnapRotationDegrees))
                                 rotationDelta = _innerRotation;
-                            else if (_map.Viewport.Rotation != 0)
+                            else if (Viewport.Rotation != 0)
                             {
                                 if (Math.Abs(_innerRotation) <= Math.Abs(ReSnapRotationDegrees))
-                                    rotationDelta = -_map.Viewport.Rotation;
+                                    rotationDelta = -Viewport.Rotation;
                                 else
-                                    rotationDelta = _innerRotation - _map.Viewport.Rotation;
+                                    rotationDelta = _innerRotation - Viewport.Rotation;
                             }
                         }
 
-                        _map.Viewport.Transform(center.X, center.Y, prevCenter.X, prevCenter.Y, ZoomLock ? 1 : radius / prevRadius, rotationDelta);
+                        _viewport.Transform(center, prevCenter, Map.ZoomLock ? 1 : radius / prevRadius, rotationDelta);
 
                         (_previousCenter, _previousRadius, _previousAngle) = (center, radius, angle);
 
-                        ViewportLimiter.Limit(_map.Viewport,
-                            _map.ZoomMode, _map.ZoomLimits, _map.Resolutions,
-                            _map.PanMode, _map.PanLimits, _map.Envelope);
-
-                        InvalidateCanvas();
+                        RefreshGraphics();
                     }
                     break;
             }
@@ -546,6 +515,7 @@ namespace Mapsui.UI.Forms
         /// </summary>
         /// <param name="screenPosition">First clicked/touched position on screen</param>
         /// <param name="numOfTaps">Number of taps on map (2 is a double click/tap)</param>
+        /// <returns>True, if the event is handled</returns>
         private bool OnDoubleTapped(Geometries.Point screenPosition, int numOfTaps)
         {
             var args = new TappedEventArgs(screenPosition, numOfTaps);
@@ -555,12 +525,16 @@ namespace Mapsui.UI.Forms
             if (args.Handled)
                 return true;
 
-            var tapWasHandled = Map.InvokeInfo(screenPosition, screenPosition, _renderer.SymbolCache, WidgetTouched, numOfTaps);
+            var eventReturn = InvokeInfo(Map.Layers, Map.GetWidgetsOfMapAndLayers(), Viewport, screenPosition, 
+                screenPosition, _renderer.SymbolCache, WidgetTouched, numOfTaps);
 
-            if (!tapWasHandled)
+            if (eventReturn != null)
             {
-                // Double tap as zoom
-                return OnZoomIn(screenPosition);
+                if (!eventReturn.Handled)
+                {
+                    // Double tap as zoom
+                    return OnZoomIn(screenPosition);
+                }
             }
 
             return false;
@@ -570,6 +544,7 @@ namespace Mapsui.UI.Forms
         /// Called, when mouse/finger/pen tapped on map one time
         /// </summary>
         /// <param name="screenPosition">Clicked/touched position on screen</param>
+        /// <returns>True, if the event is handled</returns>
         private bool OnSingleTapped(Geometries.Point screenPosition)
         {
             var args = new TappedEventArgs(screenPosition, 1);
@@ -579,13 +554,20 @@ namespace Mapsui.UI.Forms
             if (args.Handled)
                 return true;
 
-            return Map.InvokeInfo(screenPosition, screenPosition, _renderer.SymbolCache, WidgetTouched, 1);
+            var eventReturn = InvokeInfo(Map.Layers, Map.GetWidgetsOfMapAndLayers(), Viewport, screenPosition, 
+                screenPosition, _renderer.SymbolCache, WidgetTouched, 1);
+
+            if (eventReturn != null)
+                return eventReturn.Handled;
+
+            return false;
         }
 
         /// <summary>
         /// Called, when mouse/finger/pen tapped long on map
         /// </summary>
         /// <param name="screenPosition">Clicked/touched position on screen</param>
+        /// <returns>True, if the event is handled</returns>
         private bool OnLongTapped(Geometries.Point screenPosition)
         {
             var args = new TappedEventArgs(screenPosition, 1);
@@ -626,6 +608,11 @@ namespace Mapsui.UI.Forms
         public float GetDeviceIndependentUnits()
         {
             return SkiaScale;
+        }
+
+        public void OpenBrowser(string url)
+        {
+            Device.OpenUri(new Uri(url));
         }
 
         private void RunOnUIThread(Action action)

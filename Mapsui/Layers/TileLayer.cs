@@ -37,10 +37,10 @@ namespace Mapsui.Layers
     /// <summary>
     /// Layer, which displays a map consisting of individual tiles
     /// </summary>
-    public class TileLayer : BaseLayer
+    public class TileLayer : BaseLayer, IAsyncDataFetcher
     {
         private ITileSource _tileSource;
-        private readonly IRenderGetStrategy _renderStrategy;
+        private readonly IRenderGetStrategy _renderGetStrategy;
         private readonly int _minExtraTiles;
         private readonly int _maxExtraTiles;
         private int _numberTilesNeeded;
@@ -74,17 +74,17 @@ namespace Mapsui.Layers
         /// <param name="maxTiles">Maximum number of tiles to cache</param>
         /// <param name="maxRetries">Unused</param>
         /// <param name="fetchStrategy">Strategy to get list of tiles for given extent</param>
-        /// <param name="renderFetchStrategy"></param>
+        /// <param name="renderGetStrategy"></param>
         /// <param name="minExtraTiles">Number of minimum extra tiles for memory cache</param>
         /// <param name="maxExtraTiles">Number of maximum extra tiles for memory cache</param>
         // ReSharper disable once UnusedParameter.Local // Is public and won't break this now
         public TileLayer(ITileSource source = null, int minTiles = 200, int maxTiles = 300, int maxRetries = 2, IFetchStrategy fetchStrategy = null,
-            IRenderGetStrategy renderFetchStrategy = null, int minExtraTiles = -1, int maxExtraTiles = -1)
+            IRenderGetStrategy renderGetStrategy = null, int minExtraTiles = -1, int maxExtraTiles = -1)
         {
             MemoryCache = new MemoryCache<Feature>(minTiles, maxTiles);
             Style = new VectorStyle { Outline = { Color = Color.FromArgb(0, 0, 0, 0) } }; // initialize with transparent outline
-            var fetchStrategy1 = fetchStrategy ?? new MinimalFetchStrategy();
-            _renderStrategy = renderFetchStrategy ?? new RenderGetStrategy();
+            var fetchStrategy1 = fetchStrategy ?? new FetchStrategy(3);
+            _renderGetStrategy = renderGetStrategy ?? new RenderGetStrategy();
             _minExtraTiles = minExtraTiles;
             _maxExtraTiles = maxExtraTiles;
             _tileFetchDispatcher = new TileFetchDispatcher(MemoryCache, fetchStrategy1);
@@ -123,28 +123,25 @@ namespace Mapsui.Layers
         {
             if (_tileSource?.Schema == null) return Enumerable.Empty<IFeature>();
             UpdateMemoryCacheMinAndMax();
-            return _renderStrategy.GetFeatures(box, resolution, _tileSource?.Schema, MemoryCache);
+            return _renderGetStrategy.GetFeatures(box, resolution, _tileSource?.Schema, MemoryCache);
         }
 
-        /// <summary>
-        /// Aborts the tile fetches that are in progress. If this method is not called
-        /// the threads will terminate naturally. It will just take a little longer.
-        /// </summary>
-        public override void AbortFetch()
+        /// <inheritdoc />
+        public void AbortFetch()
         {
             _fetchMachine?.Stop();
         }
 
         /// <inheritdoc />
-        public override void ClearCache()
+        public void ClearCache()
         {
             MemoryCache.Clear();
         }
 
         /// <inheritdoc />
-        public override void ViewChanged(bool majorChange, BoundingBox extent, double resolution)
+        public override void RefreshData(BoundingBox extent, double resolution, bool majorChange)
         {
-            if (Enabled && extent.GetArea() > 0 && _tileFetchDispatcher != null && MaxVisible > resolution && MinVisible < resolution)
+            if (Enabled && extent.GetArea() > 0 && _tileFetchDispatcher != null && MaxVisible >= resolution && MinVisible <= resolution)
             {
                 _tileFetchDispatcher.SetViewport(extent, resolution);
                 _fetchMachine.Start();
@@ -163,14 +160,16 @@ namespace Mapsui.Layers
 			MemoryCache.Clear();
 		    _tileFetchDispatcher.TileSource = tileSource;
             _tileSource = tileSource;
-		    OnPropertyChanged(nameof(Envelope));
-
+            
             if (_tileSource != null)
             {
                 if (Attribution == null) Attribution = new Hyperlink();
                 Attribution.Text = _tileSource.Attribution?.Text;
                 Attribution.Url = _tileSource.Attribution?.Url;
             }
+
+		    OnPropertyChanged(nameof(Layer.DataSource)); // To trigger new RefreshData.
+            OnPropertyChanged(nameof(Envelope));
         }
 
         private void TileFetchDispatcherOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)

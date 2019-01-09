@@ -5,10 +5,10 @@ using System.Text;
 using Mapsui.UI.iOS;
 using UIKit;
 using CoreGraphics;
-using Mapsui.Samples.Common.Helpers;
-using Mapsui.Samples.Common.Maps;
 using Mapsui.UI;
 using Mapsui.Providers;
+using Mapsui.Samples.Common.Helpers;
+using Mapsui.Samples.Common.Maps;
 
 namespace Mapsui.Samples.iOS
 {
@@ -28,12 +28,13 @@ namespace Mapsui.Samples.iOS
             MbTilesHelper.DeployMbTilesFile(s => File.Create(Path.Combine(MbTilesLocationOnIos, s)));
 
             var mapControl = CreateMap(View.Bounds);
-            mapControl.Map.Info += MapOnInfo;
+            mapControl.Info += MapOnInfo;
             View = mapControl;
         }
 
         private void MapOnInfo(object sender, MapInfoEventArgs e)
         {
+            if (e.MapInfo.Feature == null) return;
             Debug.WriteLine(ToString(e.MapInfo.Feature));
         }
 
@@ -54,7 +55,6 @@ namespace Mapsui.Samples.iOS
             return new MapControl(bounds)
             {
                 Map = InfoLayersSample.CreateMap(),
-                RotationLock = false,
                 UnSnapRotationDegrees = 30,
                 ReSnapRotationDegrees = 5
             };                        

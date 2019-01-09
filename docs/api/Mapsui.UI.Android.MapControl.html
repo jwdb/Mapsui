@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class MapControl
    ">
-    <meta name="generator" content="docfx 2.36.2.0">
+    <meta name="generator" content="docfx 2.40.7.0">
     
     <link rel="shortcut icon" href="../images/favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -83,12 +83,13 @@
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="Mapsui.UI.IMapControl.html">IMapControl</a></div>
+    <div><span class="xref">ViewGroup</span></div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Mapsui.UI.Android.html">Mapsui.UI.Android</a></h6>
   <h6><strong>Assembly</strong>: Mapsui.UI.Android.dll</h6>
   <h5 id="Mapsui_UI_Android_MapControl_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class MapControl : ViewGroup, IMapControl</code></pre>
+    <pre><code class="lang-csharp hljs">public class MapControl : INotifyPropertyChanged, IMapControl, ViewGroup</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -97,7 +98,7 @@
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl__ctor_Context_IAttributeSet_.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.%23ctor(Context%2CIAttributeSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L35">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L32">View Source</a>
   </span>
   <a id="Mapsui_UI_Android_MapControl__ctor_" data-uid="Mapsui.UI.Android.MapControl.#ctor*"></a>
   <h4 id="Mapsui_UI_Android_MapControl__ctor_Context_IAttributeSet_" data-uid="Mapsui.UI.Android.MapControl.#ctor(Context,IAttributeSet)">MapControl(Context, IAttributeSet)</h4>
@@ -134,7 +135,7 @@
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl__ctor_Context_IAttributeSet_System_Int32_.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.%23ctor(Context%2CIAttributeSet%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L41">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L38">View Source</a>
   </span>
   <a id="Mapsui_UI_Android_MapControl__ctor_" data-uid="Mapsui.UI.Android.MapControl.#ctor*"></a>
   <h4 id="Mapsui_UI_Android_MapControl__ctor_Context_IAttributeSet_System_Int32_" data-uid="Mapsui.UI.Android.MapControl.#ctor(Context,IAttributeSet,System.Int32)">MapControl(Context, IAttributeSet, Int32)</h4>
@@ -178,11 +179,12 @@
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_Map.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.Map%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L147">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L231">View Source</a>
   </span>
   <a id="Mapsui_UI_Android_MapControl_Map_" data-uid="Mapsui.UI.Android.MapControl.Map*"></a>
   <h4 id="Mapsui_UI_Android_MapControl_Map" data-uid="Mapsui.UI.Android.MapControl.Map">Map</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Map holding data for which is shown in this MapControl</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -205,19 +207,19 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_PanLock.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.PanLock%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_Navigator.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.Navigator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L30">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L95">View Source</a>
   </span>
-  <a id="Mapsui_UI_Android_MapControl_PanLock_" data-uid="Mapsui.UI.Android.MapControl.PanLock*"></a>
-  <h4 id="Mapsui_UI_Android_MapControl_PanLock" data-uid="Mapsui.UI.Android.MapControl.PanLock">PanLock</h4>
-  <div class="markdown level1 summary"><p>Allow map panning through touch or mouse</p>
+  <a id="Mapsui_UI_Android_MapControl_Navigator_" data-uid="Mapsui.UI.Android.MapControl.Navigator*"></a>
+  <h4 id="Mapsui_UI_Android_MapControl_Navigator" data-uid="Mapsui.UI.Android.MapControl.Navigator">Navigator</h4>
+  <div class="markdown level1 summary"><p>Handles all manipulations of the map viewport</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool PanLock { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public INavigator Navigator { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -229,25 +231,25 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="Mapsui.INavigator.html">INavigator</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_PixelsPerDeviceIndependentUnit.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.PixelsPerDeviceIndependentUnit%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_PixelDensity.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.PixelDensity%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L64">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L63">View Source</a>
   </span>
-  <a id="Mapsui_UI_Android_MapControl_PixelsPerDeviceIndependentUnit_" data-uid="Mapsui.UI.Android.MapControl.PixelsPerDeviceIndependentUnit*"></a>
-  <h4 id="Mapsui_UI_Android_MapControl_PixelsPerDeviceIndependentUnit" data-uid="Mapsui.UI.Android.MapControl.PixelsPerDeviceIndependentUnit">PixelsPerDeviceIndependentUnit</h4>
+  <a id="Mapsui_UI_Android_MapControl_PixelDensity_" data-uid="Mapsui.UI.Android.MapControl.PixelDensity*"></a>
+  <h4 id="Mapsui_UI_Android_MapControl_PixelDensity" data-uid="Mapsui.UI.Android.MapControl.PixelDensity">PixelDensity</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float PixelsPerDeviceIndependentUnit { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public float PixelDensity { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -269,11 +271,12 @@
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_Renderer.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.Renderer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L52">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L72">View Source</a>
   </span>
   <a id="Mapsui_UI_Android_MapControl_Renderer_" data-uid="Mapsui.UI.Android.MapControl.Renderer*"></a>
   <h4 id="Mapsui_UI_Android_MapControl_Renderer" data-uid="Mapsui.UI.Android.MapControl.Renderer">Renderer</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Renderer that is used from this MapControl</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -299,7 +302,7 @@
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_ReSnapRotationDegrees.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.ReSnapRotationDegrees%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L50">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L54">View Source</a>
   </span>
   <a id="Mapsui_UI_Android_MapControl_ReSnapRotationDegrees_" data-uid="Mapsui.UI.Android.MapControl.ReSnapRotationDegrees*"></a>
   <h4 id="Mapsui_UI_Android_MapControl_ReSnapRotationDegrees" data-uid="Mapsui.UI.Android.MapControl.ReSnapRotationDegrees">ReSnapRotationDegrees</h4>
@@ -327,101 +330,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_RotationLock.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.RotationLock%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L35">View Source</a>
-  </span>
-  <a id="Mapsui_UI_Android_MapControl_RotationLock_" data-uid="Mapsui.UI.Android.MapControl.RotationLock*"></a>
-  <h4 id="Mapsui_UI_Android_MapControl_RotationLock" data-uid="Mapsui.UI.Android.MapControl.RotationLock">RotationLock</h4>
-  <div class="markdown level1 summary"><p>Allow a rotation with a pinch gesture</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool RotationLock { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_ScreenHeight.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.ScreenHeight%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L359">View Source</a>
-  </span>
-  <a id="Mapsui_UI_Android_MapControl_ScreenHeight_" data-uid="Mapsui.UI.Android.MapControl.ScreenHeight*"></a>
-  <h4 id="Mapsui_UI_Android_MapControl_ScreenHeight" data-uid="Mapsui.UI.Android.MapControl.ScreenHeight">ScreenHeight</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float ScreenHeight { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_ScreenWidth.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.ScreenWidth%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L358">View Source</a>
-  </span>
-  <a id="Mapsui_UI_Android_MapControl_ScreenWidth_" data-uid="Mapsui.UI.Android.MapControl.ScreenWidth*"></a>
-  <h4 id="Mapsui_UI_Android_MapControl_ScreenWidth" data-uid="Mapsui.UI.Android.MapControl.ScreenWidth">ScreenWidth</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float ScreenWidth { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Single</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_UnSnapRotationDegrees.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.UnSnapRotationDegrees%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L45">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L36">View Source</a>
   </span>
   <a id="Mapsui_UI_Android_MapControl_UnSnapRotationDegrees_" data-uid="Mapsui.UI.Android.MapControl.UnSnapRotationDegrees*"></a>
   <h4 id="Mapsui_UI_Android_MapControl_UnSnapRotationDegrees" data-uid="Mapsui.UI.Android.MapControl.UnSnapRotationDegrees">UnSnapRotationDegrees</h4>
@@ -449,19 +361,19 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_ZoomLock.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.ZoomLock%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_Viewport.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.Viewport%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L40">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L90">View Source</a>
   </span>
-  <a id="Mapsui_UI_Android_MapControl_ZoomLock_" data-uid="Mapsui.UI.Android.MapControl.ZoomLock*"></a>
-  <h4 id="Mapsui_UI_Android_MapControl_ZoomLock" data-uid="Mapsui.UI.Android.MapControl.ZoomLock">ZoomLock</h4>
-  <div class="markdown level1 summary"><p>Allow zooming though touch or mouse</p>
+  <a id="Mapsui_UI_Android_MapControl_Viewport_" data-uid="Mapsui.UI.Android.MapControl.Viewport*"></a>
+  <h4 id="Mapsui_UI_Android_MapControl_Viewport" data-uid="Mapsui.UI.Android.MapControl.Viewport">Viewport</h4>
+  <div class="markdown level1 summary"><p>Viewport holding information about visible part of the map. Viewport can never be null.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool ZoomLock { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IReadOnlyViewport Viewport { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -473,7 +385,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><a class="xref" href="Mapsui.IReadOnlyViewport.html">IReadOnlyViewport</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -482,10 +394,26 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_Clear.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.Clear%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L387">View Source</a>
+  </span>
+  <a id="Mapsui_UI_Android_MapControl_Clear_" data-uid="Mapsui.UI.Android.MapControl.Clear*"></a>
+  <h4 id="Mapsui_UI_Android_MapControl_Clear" data-uid="Mapsui.UI.Android.MapControl.Clear">Clear()</h4>
+  <div class="markdown level1 summary"><p>Clear cache and repaint map</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Clear()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_Dispose.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L322">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L292">View Source</a>
   </span>
   <a id="Mapsui_UI_Android_MapControl_Dispose_" data-uid="Mapsui.UI.Android.MapControl.Dispose*"></a>
   <h4 id="Mapsui_UI_Android_MapControl_Dispose" data-uid="Mapsui.UI.Android.MapControl.Dispose">Dispose()</h4>
@@ -500,7 +428,7 @@
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_Dispose_System_Boolean_.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.Dispose(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L328">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L298">View Source</a>
   </span>
   <a id="Mapsui_UI_Android_MapControl_Dispose_" data-uid="Mapsui.UI.Android.MapControl.Dispose*"></a>
   <h4 id="Mapsui_UI_Android_MapControl_Dispose_System_Boolean_" data-uid="Mapsui.UI.Android.MapControl.Dispose(System.Boolean)">Dispose(Boolean)</h4>
@@ -529,10 +457,122 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_GetMapInfo_IEnumerable_Mapsui_Layers_ILayer__Mapsui_Geometries_Point_System_Int32_.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.GetMapInfo(IEnumerable%7BMapsui.Layers.ILayer%7D%2CMapsui.Geometries.Point%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L314">View Source</a>
+  </span>
+  <a id="Mapsui_UI_Android_MapControl_GetMapInfo_" data-uid="Mapsui.UI.Android.MapControl.GetMapInfo*"></a>
+  <h4 id="Mapsui_UI_Android_MapControl_GetMapInfo_IEnumerable_Mapsui_Layers_ILayer__Mapsui_Geometries_Point_System_Int32_" data-uid="Mapsui.UI.Android.MapControl.GetMapInfo(IEnumerable{Mapsui.Layers.ILayer},Mapsui.Geometries.Point,System.Int32)">GetMapInfo(IEnumerable&lt;ILayer&gt;, Point, Int32)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public MapInfo GetMapInfo(IEnumerable&lt;ILayer&gt; layers, Point screenPosition, int margin = 0)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Mapsui.Layers.ILayer.html">ILayer</a>&gt;</td>
+        <td><span class="parametername">layers</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Mapsui.Geometries.Point.html">Point</a></td>
+        <td><span class="parametername">screenPosition</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">margin</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Mapsui.UI.MapInfo.html">MapInfo</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_GetMapInfo_Mapsui_Geometries_Point_System_Int32_.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.GetMapInfo(Mapsui.Geometries.Point%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L307">View Source</a>
+  </span>
+  <a id="Mapsui_UI_Android_MapControl_GetMapInfo_" data-uid="Mapsui.UI.Android.MapControl.GetMapInfo*"></a>
+  <h4 id="Mapsui_UI_Android_MapControl_GetMapInfo_Mapsui_Geometries_Point_System_Int32_" data-uid="Mapsui.UI.Android.MapControl.GetMapInfo(Mapsui.Geometries.Point,System.Int32)">GetMapInfo(Point, Int32)</h4>
+  <div class="markdown level1 summary"><p>Check, if a feature at a given screen position is hit</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public MapInfo GetMapInfo(Point screenPosition, int margin = 0)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Mapsui.Geometries.Point.html">Point</a></td>
+        <td><span class="parametername">screenPosition</span></td>
+        <td><p>Screen position to check for widgets and features</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">margin</span></td>
+        <td><p>An optional extra margin around the feature to enlarge the hit area.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Mapsui.UI.MapInfo.html">MapInfo</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_Initialize.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.Initialize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L47">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L44">View Source</a>
   </span>
   <a id="Mapsui_UI_Android_MapControl_Initialize_" data-uid="Mapsui.UI.Android.MapControl.Initialize*"></a>
   <h4 id="Mapsui_UI_Android_MapControl_Initialize" data-uid="Mapsui.UI.Android.MapControl.Initialize">Initialize()</h4>
@@ -547,7 +587,7 @@
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_MapView_Touch_System_Object_TouchEventArgs_.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.MapView_Touch(System.Object%2CTouchEventArgs)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L101">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L98">View Source</a>
   </span>
   <a id="Mapsui_UI_Android_MapControl_MapView_Touch_" data-uid="Mapsui.UI.Android.MapControl.MapView_Touch*"></a>
   <h4 id="Mapsui_UI_Android_MapControl_MapView_Touch_System_Object_TouchEventArgs_" data-uid="Mapsui.UI.Android.MapControl.MapView_Touch(System.Object,TouchEventArgs)">MapView_Touch(Object, TouchEventArgs)</h4>
@@ -581,42 +621,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_NavigateToFullEnvelope_Mapsui_Utilities_ScaleMethod_.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.NavigateToFullEnvelope(Mapsui.Utilities.ScaleMethod)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L219">View Source</a>
-  </span>
-  <a id="Mapsui_UI_Android_MapControl_NavigateToFullEnvelope_" data-uid="Mapsui.UI.Android.MapControl.NavigateToFullEnvelope*"></a>
-  <h4 id="Mapsui_UI_Android_MapControl_NavigateToFullEnvelope_Mapsui_Utilities_ScaleMethod_" data-uid="Mapsui.UI.Android.MapControl.NavigateToFullEnvelope(Mapsui.Utilities.ScaleMethod)">NavigateToFullEnvelope(ScaleMethod)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void NavigateToFullEnvelope(ScaleMethod scaleMethod)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Mapsui.Utilities.ScaleMethod.html">ScaleMethod</a></td>
-        <td><span class="parametername">scaleMethod</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_OnLayout_System_Boolean_System_Int32_System_Int32_System_Int32_System_Int32_.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.OnLayout(System.Boolean%2CSystem.Int32%2CSystem.Int32%2CSystem.Int32%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L282">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L273">View Source</a>
   </span>
   <a id="Mapsui_UI_Android_MapControl_OnLayout_" data-uid="Mapsui.UI.Android.MapControl.OnLayout*"></a>
   <h4 id="Mapsui_UI_Android_MapControl_OnLayout_System_Boolean_System_Int32_System_Int32_System_Int32_System_Int32_" data-uid="Mapsui.UI.Android.MapControl.OnLayout(System.Boolean,System.Int32,System.Int32,System.Int32,System.Int32)">OnLayout(Boolean, Int32, Int32, Int32, Int32)</h4>
@@ -665,10 +673,42 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_OnPropertyChanged_System_String_.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.OnPropertyChanged(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L120">View Source</a>
+  </span>
+  <a id="Mapsui_UI_Android_MapControl_OnPropertyChanged_" data-uid="Mapsui.UI.Android.MapControl.OnPropertyChanged*"></a>
+  <h4 id="Mapsui_UI_Android_MapControl_OnPropertyChanged_System_String_" data-uid="Mapsui.UI.Android.MapControl.OnPropertyChanged(System.String)">OnPropertyChanged(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void OnPropertyChanged(string propertyName = &quot;&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">propertyName</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_OnSizeChanged_System_Int32_System_Int32_System_Int32_System_Int32_.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.OnSizeChanged(System.Int32%2CSystem.Int32%2CSystem.Int32%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L78">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L79">View Source</a>
   </span>
   <a id="Mapsui_UI_Android_MapControl_OnSizeChanged_" data-uid="Mapsui.UI.Android.MapControl.OnSizeChanged*"></a>
   <h4 id="Mapsui_UI_Android_MapControl_OnSizeChanged_System_Int32_System_Int32_System_Int32_System_Int32_" data-uid="Mapsui.UI.Android.MapControl.OnSizeChanged(System.Int32,System.Int32,System.Int32,System.Int32)">OnSizeChanged(Int32, Int32, Int32, Int32)</h4>
@@ -712,14 +752,47 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_OpenBrowser_System_String_.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.OpenBrowser(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L281">View Source</a>
+  </span>
+  <a id="Mapsui_UI_Android_MapControl_OpenBrowser_" data-uid="Mapsui.UI.Android.MapControl.OpenBrowser*"></a>
+  <h4 id="Mapsui_UI_Android_MapControl_OpenBrowser_System_String_" data-uid="Mapsui.UI.Android.MapControl.OpenBrowser(System.String)">OpenBrowser(String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void OpenBrowser(string url)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">url</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_Refresh.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.Refresh%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L95">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L162">View Source</a>
   </span>
   <a id="Mapsui_UI_Android_MapControl_Refresh_" data-uid="Mapsui.UI.Android.MapControl.Refresh*"></a>
   <h4 id="Mapsui_UI_Android_MapControl_Refresh" data-uid="Mapsui.UI.Android.MapControl.Refresh">Refresh()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Refresh data of the map and than repaint it</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -730,11 +803,12 @@
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_RefreshData.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.RefreshData%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L214">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L280">View Source</a>
   </span>
   <a id="Mapsui_UI_Android_MapControl_RefreshData_" data-uid="Mapsui.UI.Android.MapControl.RefreshData*"></a>
   <h4 id="Mapsui_UI_Android_MapControl_RefreshData" data-uid="Mapsui.UI.Android.MapControl.RefreshData">RefreshData()</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Refresh data of Map, but don&apos;t paint it</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -745,7 +819,7 @@
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_RefreshGraphics.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.RefreshGraphics%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L259">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Android/MapControl.cs/#L250">View Source</a>
   </span>
   <a id="Mapsui_UI_Android_MapControl_RefreshGraphics_" data-uid="Mapsui.UI.Android.MapControl.RefreshGraphics*"></a>
   <h4 id="Mapsui_UI_Android_MapControl_RefreshGraphics" data-uid="Mapsui.UI.Android.MapControl.RefreshGraphics">RefreshGraphics()</h4>
@@ -760,7 +834,7 @@
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_ToDeviceIndependentUnits_Mapsui_Geometries_Point_.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.ToDeviceIndependentUnits(Mapsui.Geometries.Point)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L187">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L267">View Source</a>
   </span>
   <a id="Mapsui_UI_Android_MapControl_ToDeviceIndependentUnits_" data-uid="Mapsui.UI.Android.MapControl.ToDeviceIndependentUnits*"></a>
   <h4 id="Mapsui_UI_Android_MapControl_ToDeviceIndependentUnits_Mapsui_Geometries_Point_" data-uid="Mapsui.UI.Android.MapControl.ToDeviceIndependentUnits(Mapsui.Geometries.Point)">ToDeviceIndependentUnits(Point)</h4>
@@ -810,7 +884,7 @@
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_ToPixels_Mapsui_Geometries_Point_.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.ToPixels(Mapsui.Geometries.Point)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L175">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L259">View Source</a>
   </span>
   <a id="Mapsui_UI_Android_MapControl_ToPixels_" data-uid="Mapsui.UI.Android.MapControl.ToPixels*"></a>
   <h4 id="Mapsui_UI_Android_MapControl_ToPixels_Mapsui_Geometries_Point_" data-uid="Mapsui.UI.Android.MapControl.ToPixels(Mapsui.Geometries.Point)">ToPixels(Point)</h4>
@@ -860,7 +934,7 @@
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_Unsubscribe.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.Unsubscribe%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L58">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L129">View Source</a>
   </span>
   <a id="Mapsui_UI_Android_MapControl_Unsubscribe_" data-uid="Mapsui.UI.Android.MapControl.Unsubscribe*"></a>
   <h4 id="Mapsui_UI_Android_MapControl_Unsubscribe" data-uid="Mapsui.UI.Android.MapControl.Unsubscribe">Unsubscribe()</h4>
@@ -875,13 +949,74 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_Info.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.Info%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L105">View Source</a>
+  </span>
+  <h4 id="Mapsui_UI_Android_MapControl_Info" data-uid="Mapsui.UI.Android.MapControl.Info">Info</h4>
+  <div class="markdown level1 summary"><p>Called whenever a feature in one of the layers in InfoLayers is hitten by a click </p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler&lt;MapInfoEventArgs&gt; Info</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">EventHandler</span>&lt;<a class="xref" href="Mapsui.UI.MapInfoEventArgs.html">MapInfoEventArgs</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_PropertyChanged.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.PropertyChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L118">View Source</a>
+  </span>
+  <h4 id="Mapsui_UI_Android_MapControl_PropertyChanged" data-uid="Mapsui.UI.Android.MapControl.PropertyChanged">PropertyChanged</h4>
+  <div class="markdown level1 summary"><p>Called whenever a property is changed</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event PropertyChangedEventHandler PropertyChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">PropertyChangedEventHandler</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl_ViewportInitialized.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl.ViewportInitialized%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L54">View Source</a>
+    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L100">View Source</a>
   </span>
   <h4 id="Mapsui_UI_Android_MapControl_ViewportInitialized" data-uid="Mapsui.UI.Android.MapControl.ViewportInitialized">ViewportInitialized</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Called when the viewport is initialized</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -906,6 +1041,9 @@
   <div>
       <a class="xref" href="Mapsui.UI.IMapControl.html">IMapControl</a>
   </div>
+  <div>
+      <span class="xref">ViewGroup</span>
+  </div>
 </article>
           </div>
           
@@ -917,7 +1055,7 @@
                     <a href="https://github.com/Mapsui/Mapsui/new/master/apiSpec/new?filename=Mapsui_UI_Android_MapControl.md&amp;value=---%0Auid%3A%20Mapsui.UI.Android.MapControl%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L23" class="contribution-link">View Source</a>
+                    <a href="https://github.com/Mapsui/Mapsui/blob/master/Mapsui.UI.Shared/MapControl.cs/#L27" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

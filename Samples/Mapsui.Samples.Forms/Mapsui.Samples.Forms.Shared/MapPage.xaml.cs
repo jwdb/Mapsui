@@ -1,9 +1,13 @@
 ﻿using System;
+using System.IO;
+using Mapsui.Samples.Common.Helpers;
+using Mapsui.Samples.Common.Maps;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Mapsui.UI.Forms;
 using Plugin.Geolocator;
 using Plugin.Geolocator.Abstractions;
+using Mapsui.UI;
 
 namespace Mapsui.Samples.Forms
 {
@@ -19,7 +23,7 @@ namespace Mapsui.Samples.Forms
             InitializeComponent();
         }
 
-        public MapPage(Func<Map> call, Func<MapView, MapClickedEventArgs, bool> c = null)
+        public MapPage(Action<IMapControl> setup, Func<MapView, MapClickedEventArgs, bool> c = null)
         {
             InitializeComponent();
 
@@ -34,14 +38,14 @@ namespace Mapsui.Samples.Forms
 
             StartGPS();
 
-            mapView.Map = call();
+            setup(mapView);
 
             clicker = c;
         }
 
         private void OnMapClicked(object sender, MapClickedEventArgs e)
         {
-            e.Handled = (bool)clicker?.Invoke(sender as MapView, e);
+            e.Handled = clicker != null ? (bool)clicker?.Invoke(sender as MapView, e) : false;
             //Samples.SetPins(mapView, e);
             //Samples.DrawPolylines(mapView, e);
         }
@@ -116,9 +120,9 @@ namespace Mapsui.Samples.Forms
             {
                 var coords = new UI.Forms.Position(e.Position.Latitude, e.Position.Longitude);
                 info.Text = $"{coords.ToString()} - D:{(int)e.Position.Heading} S:{Math.Round(e.Position.Speed, 2)}";
-
+                
                 mapView.MyLocationLayer.UpdateMyLocation(new UI.Forms.Position(e.Position.Latitude, e.Position.Longitude));
-                mapView.MyLocationLayer.UpdateMyDirection(e.Position.Heading, mapView.Map.Viewport.Rotation);
+                mapView.MyLocationLayer.UpdateMyDirection(e.Position.Heading, mapView.Viewport.Rotation);
                 mapView.MyLocationLayer.UpdateMySpeed(e.Position.Speed);
             });
         }
