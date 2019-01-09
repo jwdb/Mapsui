@@ -38,11 +38,11 @@ namespace Mapsui.Rendering.Skia.SkiaWidgets
                 _paintScaleBarStroke.StrokeWidth = StrokeExternal * scaleBar.Scale;
                 _paintScaleText.Color = scaleBar.TextColor.ToSkia(layerOpacity);
                 _paintScaleText.StrokeWidth = StrokeInternal * scaleBar.Scale;
-                _paintScaleText.Typeface = SKTypeface.FromFamilyName(scaleBar.Font.FontFamily, SKTypefaceStyle.Bold);
+                _paintScaleText.Typeface = SKTypeface.FromFamilyName(scaleBar.Font.FontFamily, SKFontStyleWeight.Bold, SKFontStyleWidth.Normal, SKFontStyleSlant.Upright);
                 _paintScaleText.TextSize = (float)scaleBar.Font.Size * scaleBar.Scale;
                 _paintScaleTextStroke.Color = scaleBar.Halo.ToSkia(layerOpacity);
                 _paintScaleTextStroke.StrokeWidth = StrokeInternal * scaleBar.Scale;
-                _paintScaleTextStroke.Typeface = SKTypeface.FromFamilyName(scaleBar.Font.FontFamily, SKTypefaceStyle.Bold);
+                _paintScaleTextStroke.Typeface = SKTypeface.FromFamilyName(scaleBar.Font.FontFamily, SKFontStyleWeight.Bold, SKFontStyleWidth.Normal, SKFontStyleSlant.Upright);
                 _paintScaleTextStroke.TextSize = (float)scaleBar.Font.Size * scaleBar.Scale;
             }
             
@@ -164,7 +164,7 @@ namespace Mapsui.Rendering.Skia.SkiaWidgets
             paint.Color = color;
             paint.StrokeWidth = strokeWidth * scale;
             paint.Style = style;
-            paint.Typeface = SKTypeface.FromFamilyName("Arial", SKTypefaceStyle.Bold);
+            paint.Typeface = SKTypeface.FromFamilyName("Arial", SKFontStyleWeight.Bold, SKFontStyleWidth.Normal, SKFontStyleSlant.Upright);
             paint.TextSize = 10 * scale;
             paint.IsAntialias = true;
 
