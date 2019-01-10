@@ -599,7 +599,7 @@ namespace Mapsui.UI.Forms
         /// </summary>
         /// <param name="sender">MapControl of this event</param>
         /// <param name="e">Event arguments containing what changed</param>
-        private void HandlerMapControlPropertyChanged(object sender, PropertyChangedEventArgs e)
+        public void HandlerMapControlPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals(nameof(MapControl.Map)))
             {

@@ -12,7 +12,7 @@ namespace Mapsui.UI.Forms
     /// <summary>
     /// Class, that uses the API of all other Mapsui MapControls
     /// </summary>
-    public partial class MapControl : SKGLView, IMapControl, IDisposable
+    public partial class MapControl : SKCanvasView, IMapControl, IDisposable
     {
         class TouchEvent
         {
@@ -208,7 +208,7 @@ namespace Mapsui.UI.Forms
             }
         }
 
-        void OnPaintSurface(object sender, SKPaintGLSurfaceEventArgs skPaintSurfaceEventArgs)
+        void OnPaintSurface(object sender, SKPaintSurfaceEventArgs skPaintSurfaceEventArgs)
         {
 
             _skiaScale = (float)(CanvasSize.Width / Width);
